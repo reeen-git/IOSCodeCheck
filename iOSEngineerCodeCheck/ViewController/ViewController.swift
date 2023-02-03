@@ -15,7 +15,6 @@ class ViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = .green
         return tableView
     }()
     
@@ -44,6 +43,7 @@ class ViewController: UIViewController {
         
     func setupView() {
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
+        tableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
         view.backgroundColor = .tertiarySystemBackground
         view.addSubview(tableView)
         view.addSubview(searchBar)
@@ -73,16 +73,20 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        ApiCaller.shared.task?.cancel()
+       // ApiCaller.shared.task?.cancel()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text else { return }
+        view.endEditing(true)
         if searchWord.count != 0 {
             ApiCaller.shared.searchs(with: searchWord) { [weak self] result in
                 switch result {
                 case .success(let repository):
                     self?.repository = repository
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
                 case .failure(let error):
                     assertionFailure("error: \(error.localizedDescription)")
                 }
@@ -94,15 +98,16 @@ extension ViewController: UISearchBarDelegate {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repository.count
+        repository.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        60
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        let repository = repository[indexPath.row]
-        cell.textLabel?.text = repository.fullName
-        cell.detailTextLabel?.text = repository.language
-        cell.tag = indexPath.row
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as? GitTableViewCell else { return UITableViewCell() }
+        cell.configure(with: repository[indexPath.row])
         return cell
     }
     
