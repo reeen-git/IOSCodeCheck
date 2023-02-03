@@ -7,31 +7,73 @@
 //
 
 import UIKit
+import SnapKit
 
-class ViewController: UITableViewController, UISearchBarDelegate {
-
-    @IBOutlet weak var SchBr: UISearchBar!
+class ViewController: UIViewController {
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = .green
+        return tableView
+    }()
+    
+    private lazy var searchBar: UISearchBar = {
+       let searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.backgroundColor = .darkGray
+        searchBar.placeholder = "Githubのリポジトリを検索"
+        return searchBar
+    }()
     
     var repository = [Repository]()
-    
-    var task: URLSessionTask?
-    var url: String!
-    var idx: Int!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        SchBr.text = "GitHubのリポジトリを検索できるよー"
-        SchBr.delegate = self
+        setupView()
+        setupNavigationController()
     }
     
+    func setupNavigationController() {
+        title = "Github"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+    }
+        
+    func setupView() {
+        guard let guide = view.rootSafeAreaLayoutGuide else { return }
+        view.backgroundColor = .tertiarySystemBackground
+        view.addSubview(tableView)
+        view.addSubview(searchBar)
+        
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(guide)
+            make.width.centerX.equalToSuperview()
+        }
+                
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom).offset(5)
+            make.centerX.width.bottom.equalToSuperview()
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Detail"{
+          //  let dtl = segue.destination as! ViewController2
+        }
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        // ↓こうすれば初期のテキストを消せる
         searchBar.text = ""
         return true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        task?.cancel()
+        ApiCaller.shared.task?.cancel()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -45,21 +87,17 @@ class ViewController: UITableViewController, UISearchBarDelegate {
                     assertionFailure("error: \(error.localizedDescription)")
                 }
             }
-        task?.resume()
         }
     }
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
-            let dtl = segue.destination as! ViewController2
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repository.count
     }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let repository = repository[indexPath.row]
         cell.textLabel?.text = repository.fullName
@@ -68,8 +106,8 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        idx = indexPath.row
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //idx = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
     }
 }

@@ -11,6 +11,7 @@ import UIKit
 final class ApiCaller {
     static let shared = ApiCaller()
     private let githubUrl = "https://api.github.com/search/repositories?q="
+    var task: URLSessionTask?
 
     func searchs(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void) {
         let decoder = JSONDecoder()
@@ -27,6 +28,7 @@ final class ApiCaller {
                     completion(.failure(error))
                 }
             }
-        }.resume()
+        }
+        task?.resume()
     }
 }
