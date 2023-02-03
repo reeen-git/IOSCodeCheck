@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     }()
     
     var repository = [Repository]()
+    private var isFirstSearch = true
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +37,7 @@ class ViewController: UIViewController {
     
     func setupNavigationController() {
         title = "Github"
-        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.largeTitleDisplayMode = .automatic
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
     }
@@ -66,19 +67,12 @@ class ViewController: UIViewController {
     }
 }
 
+
 extension ViewController: UISearchBarDelegate {
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.text = ""
-        return true
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       // ApiCaller.shared.task?.cancel()
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text else { return }
         view.endEditing(true)
+        
         if searchWord.count != 0 {
             ApiCaller.shared.searchs(with: searchWord) { [weak self] result in
                 switch result {
@@ -92,6 +86,13 @@ extension ViewController: UISearchBarDelegate {
                 }
             }
         }
+        
+        if isFirstSearch {
+            isFirstSearch = false
+        } else {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+        
     }
 }
 
@@ -112,7 +113,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //idx = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        let detailView = DetailViewController()
+        self.navigationController?.pushViewController(detailView, animated: true)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
     }
 }

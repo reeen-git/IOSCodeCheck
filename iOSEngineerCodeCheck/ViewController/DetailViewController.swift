@@ -10,7 +10,11 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
-    private let imageView = UIImageView()
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -68,9 +72,12 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         setTexts()
         getImage()
+        setupViews()
     }
     
     func setupViews() {
+        view.backgroundColor = .white
+        navigationController?.navigationBar.prefersLargeTitles = false
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
         view.addSubview(entireStackView)
 
