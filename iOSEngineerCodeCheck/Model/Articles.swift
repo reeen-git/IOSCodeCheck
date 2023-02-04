@@ -14,6 +14,7 @@ struct Articles: Codable {
 
 struct Repository: Codable {
     let fullName: String
+    let name: String
     let language: String?
     let stargazersCount: Int
     let watchersCount: Int
@@ -30,6 +31,7 @@ struct Repository: Codable {
 
     enum CodingKeys: String, CodingKey {
         case fullName = "full_name"
+        case name = "name"
         case language = "language"
         case stargazersCount = "stargazers_count"
         case watchersCount = "watchers_count"
@@ -43,8 +45,10 @@ struct Repository: Codable {
 
 struct Owner: Codable {
     let avatarUrl: String
+    let login: String
     
     enum CodingKeys: String, CodingKey {
         case avatarUrl = "avatar_url"
+        case login = "login"
     }
 }

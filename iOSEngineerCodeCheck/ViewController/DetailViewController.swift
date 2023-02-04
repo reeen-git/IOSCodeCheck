@@ -12,7 +12,7 @@ import SFSafeSymbols
 
 final class DetailViewController: UIViewController {
     var repository: Repository?
-
+    
     private let avorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -112,6 +112,8 @@ final class DetailViewController: UIViewController {
     }
 }
 
+//MARK: - viewDidLoad()で呼ばれるもの
+
 private extension DetailViewController {
     func setupViews() {
         view.backgroundColor = .black
@@ -135,7 +137,7 @@ private extension DetailViewController {
             make.centerY.equalTo(avorImageView.snp.centerY)
             make.leading.equalTo(avorImageView.snp.trailing).offset(20)
         }
-
+        
         headerStackView.snp.makeConstraints { make in
             make.top.equalTo(avorImageView.snp.bottom).offset(10)
             make.centerX.width.equalToSuperview()

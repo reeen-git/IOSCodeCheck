@@ -98,8 +98,9 @@ final class GitTableViewCell: UITableViewCell {
     }
 }
 
-extension GitTableViewCell {
-    private func setupViews() {
+//MARK: - viewDidLoad()で呼ばれるもの
+private extension GitTableViewCell {
+    func setupViews() {
         addSubview(entireStackView)
         addSubview(createrLabel)
         
@@ -125,30 +126,10 @@ extension GitTableViewCell {
         }
     }
     
-    private func createStackView(imageView: UIImageView, label: UILabel) {
+    func createStackView(imageView: UIImageView, label: UILabel) {
         lazy var stackView = UIStackView(arrangedSubviews: [imageView, label])
         stackView.spacing = 5
         countStackView.addArrangedSubview(stackView)
-    }
-    
-    func configure(with repository: Repository) {
-        guard let language = repository.language else { return }
-        let fullName = repository.fullName.components(separatedBy: "/")
-        createrLabel.text = fullName[0]
-        titleLabel.text = fullName[1]
-        languageLabel.text = language
-        subTitleLabel.text = repository.description
-        starsCountLabel.text = repository.stargazersCount.description
-        makeImageTintColor(language)
-        
-        if let url = repository.avatarImageUrl {
-            URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async {
-                    self?.avoterImageView.image = UIImage(data: data)
-                }
-            }.resume()
-        }
     }
     
     func makeImageTintColor(_ language: String) {
@@ -166,6 +147,29 @@ extension GitTableViewCell {
             circleImage.tintColor = .purple
         } else {
             circleImage.tintColor = .yellow
+        }
+    }
+}
+
+//MARK: - privateではないもの
+extension GitTableViewCell {
+    func configure(with repository: Repository) {
+        guard let language = repository.language else { return }
+        let fullName = repository.fullName.components(separatedBy: "/")
+        createrLabel.text = fullName[0]
+        titleLabel.text = fullName[1]
+        languageLabel.text = language
+        subTitleLabel.text = repository.description
+        starsCountLabel.text = repository.stargazersCount.description
+        makeImageTintColor(language)
+        
+        if let url = repository.avatarImageUrl {
+            URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+                guard let data = data, error == nil else { return }
+                DispatchQueue.main.async {
+                    self?.avoterImageView.image = UIImage(data: data)
+                }
+            }.resume()
         }
     }
     
