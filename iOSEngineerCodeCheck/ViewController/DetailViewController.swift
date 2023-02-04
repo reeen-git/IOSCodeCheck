@@ -11,6 +11,8 @@ import SnapKit
 import SFSafeSymbols
 
 final class DetailViewController: UIViewController {
+    var repository: Repository?
+
     private let avorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -22,12 +24,14 @@ final class DetailViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .heavy)
+        label.textColor = .white
         return label
     }()
     
     private let languageLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.textColor = .white
         return label
     }()
     
@@ -39,24 +43,28 @@ final class DetailViewController: UIViewController {
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.font = .systemFont(ofSize: 17, weight: .regular)
+        textView.textColor = .white
         return textView
     }()
     
     private let starsCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.textColor = .white
         return label
     }()
     
     private let forkCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.textColor = .white
         return label
     }()
     
     private let createrLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.textColor = .white
         return label
     }()
     
@@ -64,6 +72,7 @@ final class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemSymbol: .star)
+        imageView.tintColor = .darkGray
         return imageView
     }()
     
@@ -71,6 +80,7 @@ final class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemSymbol: .point3ConnectedTrianglepathDotted)
+        imageView.tintColor = .darkGray
         return imageView
     }()
     
@@ -94,8 +104,6 @@ final class DetailViewController: UIViewController {
         return stackView
     }()
     
-    var repository: Repository?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setTexts()
@@ -106,8 +114,9 @@ final class DetailViewController: UIViewController {
 
 private extension DetailViewController {
     func setupViews() {
-        view.backgroundColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = false
+        view.backgroundColor = .black
+        navigationController?.isToolbarHidden = true
+        self.overrideUserInterfaceStyle = .dark
         
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
         createStackView(imageView: starImage, label: starsCountLabel)

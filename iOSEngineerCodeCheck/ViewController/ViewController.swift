@@ -10,41 +10,45 @@ import UIKit
 import SnapKit
 
 class ViewController: UIViewController {
+    var repository = [Repository]()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = .black
         return tableView
     }()
     
     private lazy var searchBar: UISearchBar = {
-       let searchBar = UISearchBar()
+        let searchBar = UISearchBar()
         searchBar.delegate = self
-        searchBar.backgroundColor = .darkGray
+        searchBar.backgroundColor = .black
         searchBar.placeholder = "Githubのリポジトリを検索"
         return searchBar
     }()
     
-    var repository = [Repository]()
-    private var isFirstSearch = true
-        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupNavigationController()
     }
-    
+}
+
+private extension ViewController {
     func setupNavigationController() {
         title = "Github"
         navigationItem.largeTitleDisplayMode = .automatic
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.backgroundColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
     }
         
     func setupView() {
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
         tableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
-        view.backgroundColor = .tertiarySystemBackground
+        self.overrideUserInterfaceStyle = .dark
+        view.backgroundColor = .black
         view.addSubview(tableView)
         view.addSubview(searchBar)
         
@@ -58,20 +62,12 @@ class ViewController: UIViewController {
             make.centerX.width.bottom.equalToSuperview()
         }
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
-          //  let dtl = segue.destination as! ViewController2
-        }
-    }
 }
-
 
 extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text else { return }
         view.endEditing(true)
-        
         if searchWord.count != 0 {
             ApiCaller.shared.searchs(with: searchWord) { [weak self] result in
                 switch result {
@@ -79,35 +75,29 @@ extension ViewController: UISearchBarDelegate {
                     self?.repository = repository
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
+                        self?.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                     }
                 case .failure(let error):
                     assertionFailure("error: \(error.localizedDescription)")
                 }
             }
         }
-        
-        if isFirstSearch {
-            isFirstSearch = false
-        } else {
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-        }
-        
     }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         repository.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        60
+        130
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as? GitTableViewCell else { return UITableViewCell() }
         cell.configure(with: repository[indexPath.row])
+        cell.backgroundColor = .black
         return cell
     }
     
