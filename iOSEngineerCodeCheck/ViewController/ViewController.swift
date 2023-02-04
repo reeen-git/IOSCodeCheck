@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 
 class ViewController: UIViewController {
-    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -115,6 +114,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailView = DetailViewController()
         self.navigationController?.pushViewController(detailView, animated: true)
+        detailView.repository = repository[indexPath.row]
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
     }
 }

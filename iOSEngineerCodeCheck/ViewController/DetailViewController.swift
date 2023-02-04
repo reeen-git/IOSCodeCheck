@@ -7,66 +7,94 @@
 //
 
 import UIKit
+import SnapKit
+import SFSafeSymbols
 
-class DetailViewController: UIViewController {
-    
-    private let imageView: UIImageView = {
+final class DetailViewController: UIViewController {
+    private let avorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.borderWidth = 0.1
+        imageView.layer.cornerRadius = 5
         return imageView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
+        label.font = .systemFont(ofSize: 24, weight: .heavy)
         return label
     }()
     
     private let languageLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
     
-    private let titlelabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
-        return label
+    private let discriptionTextView: UITextView = {
+        let textView = UITextView()
+        textView.textAlignment = .left
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.font = .systemFont(ofSize: 17, weight: .regular)
+        return textView
     }()
     
     private let starsCountLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
-        return label
-    }()
-    
-    private let watcherCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
+        label.font = .systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
     private let forkCountLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
+        label.font = .systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
-    private let issueCountLabel: UILabel = {
+    private let createrLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 10, weight: .light)
+        label.font = .systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
-    private let entireStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.distribution = .fillEqually
-        stackView.alignment = .fill
+    private let starImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemSymbol: .star)
+        return imageView
+    }()
+    
+    private let forkImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemSymbol: .point3ConnectedTrianglepathDotted)
+        return imageView
+    }()
+    
+    private lazy var headerStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView])
         stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        stackView.spacing = 10
         return stackView
     }()
     
-    private var repository: Repository?
+    private let countStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    var repository: Repository?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,37 +102,68 @@ class DetailViewController: UIViewController {
         getImage()
         setupViews()
     }
-    
+}
+
+private extension DetailViewController {
     func setupViews() {
         view.backgroundColor = .white
         navigationController?.navigationBar.prefersLargeTitles = false
+        
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
-        view.addSubview(entireStackView)
+        createStackView(imageView: starImage, label: starsCountLabel)
+        createStackView(imageView: forkImage, label: forkCountLabel)
+        view.addSubview(avorImageView)
+        view.addSubview(createrLabel)
+        view.addSubview(headerStackView)
+        
+        avorImageView.snp.makeConstraints { make in
+            make.top.equalTo(guide)
+            make.size.equalTo(CGSize(width: 30, height: 30))
+            make.leading.equalToSuperview().offset(5)
+        }
+        
+        createrLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(avorImageView.snp.centerY)
+            make.leading.equalTo(avorImageView.snp.trailing).offset(20)
+        }
 
-        entireStackView.snp.makeConstraints { make in
-            make.edges.equalTo(guide)
+        headerStackView.snp.makeConstraints { make in
+            make.top.equalTo(avorImageView.snp.bottom).offset(10)
+            make.centerX.width.equalToSuperview()
+        }
+        
+        discriptionTextView.snp.makeConstraints { make in
+            make.height.equalTo(discriptionTextView.textInputView.snp.height)
+            make.centerX.equalToSuperview()
         }
     }
     
     func setTexts() {
         guard let repository else { return }
+        guard let createrName = repository.fullName.components(separatedBy: "/").first else { return }
         languageLabel.text = "Written in \(repository.language ?? "")"
-        starsCountLabel.text = "\(repository.stargazersCount) stars"
-        watcherCountLabel.text = "\(repository.watchersCount) watchers"
-        forkCountLabel.text = "\(repository.forksCount) forks"
-        issueCountLabel.text = "\(repository.openIssuesCount) open issues"
+        starsCountLabel.text = "\(repository.stargazersCount) Star"
+        forkCountLabel.text = "\(repository.forksCount) フォーク"
+        discriptionTextView.text = repository.description
+        createrLabel.text = createrName
     }
     
     func getImage(){
-        titlelabel.text = repository?.fullName
+        titleLabel.text = repository?.fullName
         if let imgURL = repository?.avatarImageUrl {
             URLSession.shared.dataTask(with: imgURL) { (data, res, err) in
                 guard let data else { return }
                 guard let image = UIImage(data: data) else { return }
                 DispatchQueue.main.async {
-                    self.imageView.image = image
+                    self.avorImageView.image = image
                 }
             }.resume()
         }
+    }
+    
+    func createStackView(imageView: UIImageView, label: UILabel) {
+        lazy var stackView = UIStackView(arrangedSubviews: [imageView, label])
+        stackView.spacing = 5
+        countStackView.addArrangedSubview(stackView)
     }
 }

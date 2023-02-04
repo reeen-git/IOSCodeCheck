@@ -9,7 +9,6 @@
 import UIKit
 
 class GitTableViewCell: UITableViewCell {
-    
     let titleLabel: UILabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .bold)
@@ -18,7 +17,7 @@ class GitTableViewCell: UITableViewCell {
     
     let subTitleLabel: UILabel = {
        let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.font = .systemFont(ofSize: 10, weight: .light)
         return label
     }()

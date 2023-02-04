@@ -10,6 +10,7 @@
 		4B422600298D115A006D463C /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4B4225FF298D115A006D463C /* SnapKit */; };
 		4B422603298D155C006D463C /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B422602298D155C006D463C /* UIView+.swift */; };
 		4B422605298D2ECF006D463C /* GitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B422604298D2ECF006D463C /* GitTableViewCell.swift */; };
+		4B422608298E4777006D463C /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = 4B422607298E4777006D463C /* SFSafeSymbols */; };
 		4BA578D5298D0349007739AB /* Articles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA578D4298D0349007739AB /* Articles.swift */; };
 		4BA578D7298D0350007739AB /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA578D6298D0350007739AB /* ApiCaller.swift */; };
 		BF0A658D244F2A3B00280FA6 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */; };
@@ -65,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B422608298E4777006D463C /* SFSafeSymbols in Frameworks */,
 				4B422600298D115A006D463C /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,6 +194,7 @@
 			name = iOSEngineerCodeCheck;
 			packageProductDependencies = (
 				4B4225FF298D115A006D463C /* SnapKit */,
+				4B422607298E4777006D463C /* SFSafeSymbols */,
 			);
 			productName = iOSEngineerCodeCheck;
 			productReference = BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */;
@@ -267,6 +270,7 @@
 			mainGroup = BFD945D2244DC5E80012785A;
 			packageReferences = (
 				4B4225FE298D115A006D463C /* XCRemoteSwiftPackageReference "SnapKit" */,
+				4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 			);
 			productRefGroup = BFD945DC244DC5E80012785A /* Products */;
 			projectDirPath = "";
@@ -648,6 +652,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -655,6 +667,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4B4225FE298D115A006D463C /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		4B422607298E4777006D463C /* SFSafeSymbols */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
+			productName = SFSafeSymbols;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
