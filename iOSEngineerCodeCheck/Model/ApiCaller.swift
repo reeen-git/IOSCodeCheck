@@ -10,22 +10,40 @@ import UIKit
 
 final class ApiCaller {
     static let shared = ApiCaller()
+    private let decoder = JSONDecoder()
     private let githubUrl = "https://api.github.com/search/repositories?q="
     
     func searchs(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void) {
-        let decoder = JSONDecoder()
         let queryString = query.replacingOccurrences(of: " ", with: "+")
-        guard let urlString = URL(string: githubUrl + queryString) else { return }
-        URLSession.shared.dataTask(with: urlString) { data, _, error in
+        guard let searchUrl = URL(string: githubUrl + queryString) else { return }
+        URLSession.shared.dataTask(with: searchUrl) { data, _, error in
             if let error = error {
                 completion(.failure(error))
             } else if let data = data {
                 do {
-                    let result = try decoder.decode(Articles.self, from: data)
+                    let result = try self.decoder.decode(Articles.self, from: data)
                     completion(.success(result.items))
                 } catch {
                     completion(.failure(error))
                 }
+            }
+        }.resume()
+    }
+
+    func fetchReadme(repository: Repository, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "https://api.github.com/repos/\(repository.owner.login)/\(repository.name)/readme") else { return }
+        
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                do {
+                    let result = try self.decoder.decode(RepositoryReadme.self, from: data)
+                    completion(.success(result.content))
+                } catch {
+                    completion(.failure(error))
+                }
+                return
             }
         }.resume()
     }

@@ -9,9 +9,12 @@
 import UIKit
 import SnapKit
 import SFSafeSymbols
+import WebKit
+import Ink
 
 final class DetailViewController: UIViewController {
     var repository: Repository?
+    let parser = MarkdownParser()
     
     private let avorImageView: UIImageView = {
         let imageView = UIImageView()
@@ -72,7 +75,7 @@ final class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemSymbol: .star)
-        imageView.tintColor = .darkGray
+        imageView.tintColor = .systemGray2
         return imageView
     }()
     
@@ -80,12 +83,22 @@ final class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(systemSymbol: .point3ConnectedTrianglepathDotted)
-        imageView.tintColor = .darkGray
+        imageView.tintColor = .systemGray2
         return imageView
     }()
     
+    private let readMeView: WKWebView = {
+        let webConfiguration = WKWebViewConfiguration()
+        let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.isOpaque = false
+        webView.backgroundColor = .black
+        webView.tintColor = .white
+        webView.allowsBackForwardNavigationGestures = true
+        return webView
+    }()
+    
     private lazy var headerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView, readMeView])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
@@ -109,6 +122,7 @@ final class DetailViewController: UIViewController {
         setTexts()
         getImage()
         setupViews()
+        getReadMeData()
     }
 }
 
@@ -126,6 +140,7 @@ private extension DetailViewController {
         view.addSubview(avorImageView)
         view.addSubview(createrLabel)
         view.addSubview(headerStackView)
+        view.addSubview(readMeView)
         
         avorImageView.snp.makeConstraints { make in
             make.top.equalTo(guide)
@@ -146,6 +161,14 @@ private extension DetailViewController {
         discriptionTextView.snp.makeConstraints { make in
             make.height.equalTo(discriptionTextView.textInputView.snp.height)
             make.centerX.equalToSuperview()
+        }
+        
+        readMeView.snp.makeConstraints { make in
+            make.top.equalTo(headerStackView.snp.bottom).offset(10)
+            make.leading.equalTo(headerStackView.snp.leading).offset(10)
+            make.trailing.equalTo(headerStackView.snp.trailing).offset(-10)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(guide)
         }
     }
     
@@ -176,5 +199,32 @@ private extension DetailViewController {
         lazy var stackView = UIStackView(arrangedSubviews: [imageView, label])
         stackView.spacing = 5
         countStackView.addArrangedSubview(stackView)
+        imageView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 15, height: 15))
+        }
+    }
+}
+
+extension DetailViewController {
+    func getReadMeData() {
+        guard let repository else { return }
+        ApiCaller.shared.fetchReadme(repository: repository) { result in
+            switch result {
+            case .success(let data):
+                self.displayMarkdown(input: data)
+            case .failure(let error):
+                assertionFailure("error: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func displayMarkdown(input: String) {
+        guard let decodedData = Data(base64Encoded: input, options: .ignoreUnknownCharacters),
+              let markdown = String(data: decodedData, encoding: .utf8) else { return }
+        let htmlBody = parser.parse(markdown).html
+        let html = "<html><head><style>body {color: white;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
+        DispatchQueue.main.async { [weak self] in
+            self?.readMeView.loadHTMLString(html, baseURL: nil)
+        }
     }
 }

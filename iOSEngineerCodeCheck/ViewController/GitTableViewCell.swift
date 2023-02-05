@@ -111,10 +111,6 @@ private extension GitTableViewCell {
             make.size.equalTo(CGSize(width: 20, height: 20))
         }
         
-        starImage.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 13, height: 13))
-        }
-        
         entireStackView.snp.makeConstraints { make in
             make.width.equalTo(contentView)
             make.centerX.equalToSuperview()
@@ -130,11 +126,16 @@ private extension GitTableViewCell {
         lazy var stackView = UIStackView(arrangedSubviews: [imageView, label])
         stackView.spacing = 5
         countStackView.addArrangedSubview(stackView)
+        imageView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 13, height: 13))
+        }
     }
     
     func makeImageTintColor(_ language: String) {
         if language == "Swift" {
             circleImage.tintColor = .orange
+        } else if language == "C++" {
+            circleImage.tintColor = .systemPink
         } else if language == "Python" {
             circleImage.tintColor = .blue
         } else if language == "C" {
