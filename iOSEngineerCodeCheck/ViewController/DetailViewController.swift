@@ -7,18 +7,18 @@
 //
 
 import UIKit
+import WebKit
 import SnapKit
 import SFSafeSymbols
-import WebKit
 import Ink
 
 final class DetailViewController: UIViewController {
-    var repository: Repository?
-    let parser = MarkdownParser()
+    private var htmlData = ""
     
     private let avorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         imageView.layer.borderWidth = 0.1
         imageView.layer.cornerRadius = 5
         return imageView
@@ -33,7 +33,7 @@ final class DetailViewController: UIViewController {
     
     private let languageLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textColor = .white
         return label
     }()
@@ -45,7 +45,7 @@ final class DetailViewController: UIViewController {
         textView.isSelectable = false
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
-        textView.font = .systemFont(ofSize: 17, weight: .regular)
+        textView.font = .systemFont(ofSize: 16, weight: .regular)
         textView.textColor = .white
         return textView
     }()
@@ -87,18 +87,52 @@ final class DetailViewController: UIViewController {
         return imageView
     }()
     
-    private let readMeView: WKWebView = {
+    private lazy var readMeView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+      let css = "body { transform: scale(1.5) !important; transform-origin: 0 0 !important; }"
+        let script = WKUserScript(source: "var style = document.createElement('style'); style.innerHTML = '\(css)'; document.head.appendChild(style);", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        webView.configuration.userContentController.addUserScript(script)
         webView.isOpaque = false
         webView.backgroundColor = .black
         webView.tintColor = .white
         webView.allowsBackForwardNavigationGestures = true
+        webView.uiDelegate = self
         return webView
     }()
     
+    private let backToReadMeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("README", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.addTarget(.none, action: #selector(goToReadMe), for: .touchUpInside)
+        return button
+    }()
+    
+    private let backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemSymbol: .chevronBackward), for: .normal)
+        button.addTarget(.none, action: #selector(goBackward), for: .touchUpInside)
+        return button
+    }()
+    
+    private let forwardButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemSymbol: .chevronForward), for: .normal)
+        button.addTarget(.none, action: #selector(goFoward), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var webButtonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [backToReadMeButton, backButton, forwardButton])
+        stackView.distribution = .fillEqually
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
     private lazy var headerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView, readMeView])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
@@ -117,11 +151,14 @@ final class DetailViewController: UIViewController {
         return stackView
     }()
     
+    private let parser = MarkdownParser()
+    var repository: Repository?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setTexts()
-        getImage()
         setupViews()
+        getImage()
         getReadMeData()
     }
 }
@@ -131,17 +168,17 @@ final class DetailViewController: UIViewController {
 private extension DetailViewController {
     func setupViews() {
         view.backgroundColor = .black
-        navigationController?.isToolbarHidden = true
         self.overrideUserInterfaceStyle = .dark
-        
-        guard let guide = view.rootSafeAreaLayoutGuide else { return }
+       
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
         view.addSubview(avorImageView)
         view.addSubview(createrLabel)
         view.addSubview(headerStackView)
         view.addSubview(readMeView)
+        view.addSubview(webButtonStackView)
         
+        guard let guide = view.rootSafeAreaLayoutGuide else { return }
         avorImageView.snp.makeConstraints { make in
             make.top.equalTo(guide)
             make.size.equalTo(CGSize(width: 30, height: 30))
@@ -164,11 +201,18 @@ private extension DetailViewController {
         }
         
         readMeView.snp.makeConstraints { make in
-            make.top.equalTo(headerStackView.snp.bottom).offset(10)
+            make.top.equalTo(headerStackView.snp.bottom).offset(20)
             make.leading.equalTo(headerStackView.snp.leading).offset(10)
             make.trailing.equalTo(headerStackView.snp.trailing).offset(-10)
             make.centerX.equalToSuperview()
+        }
+        
+        webButtonStackView.snp.makeConstraints { make in
+            make.top.equalTo(readMeView.snp.bottom).offset(10)
             make.bottom.equalTo(guide)
+            make.leading.equalTo(headerStackView.snp.leading).offset(10)
+            make.trailing.equalTo(headerStackView.snp.trailing).offset(-10)
+            make.centerX.equalToSuperview()
         }
     }
     
@@ -205,7 +249,7 @@ private extension DetailViewController {
     }
 }
 
-extension DetailViewController {
+extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
         guard let repository else { return }
         ApiCaller.shared.fetchReadme(repository: repository) { result in
@@ -217,14 +261,39 @@ extension DetailViewController {
             }
         }
     }
-
+    
     func displayMarkdown(input: String) {
         guard let decodedData = Data(base64Encoded: input, options: .ignoreUnknownCharacters),
               let markdown = String(data: decodedData, encoding: .utf8) else { return }
         let htmlBody = parser.parse(markdown).html
-        let html = "<html><head><style>body {color: white;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
+        self.htmlData = "<html><head><style>body {color: white;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
         DispatchQueue.main.async { [weak self] in
-            self?.readMeView.loadHTMLString(html, baseURL: nil)
+            self?.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
         }
     }
+    
+    @objc func goToReadMe(_ sender: UIButton) {
+        DispatchQueue.main.async { [weak self] in
+            self?.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
+        }
+    }
+    
+    @objc func goBackward(_ sender: UIButton) {
+        if readMeView.canGoBack {
+            readMeView.goBack()
+        }
+    }
+    
+    @objc func goFoward(_ sender: UIButton) {
+        if readMeView.canGoForward {
+            readMeView.goForward()
+        }
+    }
+    
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+           if navigationAction.targetFrame == nil {
+               readMeView.load(navigationAction.request)
+           }
+           return nil
+       }
 }

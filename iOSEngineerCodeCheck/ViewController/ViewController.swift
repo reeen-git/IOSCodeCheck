@@ -10,8 +10,6 @@ import UIKit
 import SnapKit
 
 class ViewController: UIViewController {
-    private var repository = [Repository]()
-    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -29,6 +27,8 @@ class ViewController: UIViewController {
         return searchBar
     }()
     
+    private var repository = [Repository]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -41,8 +41,6 @@ class ViewController: UIViewController {
 private extension ViewController {
     func setupNavigationController() {
         title = "Github"
-        navigationItem.largeTitleDisplayMode = .automatic
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.backgroundColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
     }
