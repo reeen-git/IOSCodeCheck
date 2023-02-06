@@ -29,22 +29,19 @@ final class ApiCaller {
             }
         }.resume()
     }
-
-    func fetchReadme(repository: Repository, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    func fetchReadme(repository: Repository, completion: @escaping (String?) -> Void) {
         guard let url = URL(string: "https://api.github.com/repos/\(repository.owner.login)/\(repository.name)/readme") else { return }
-        
-        URLSession.shared.dataTask(with: url) { (data, _, error) in
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                completion(.failure(error))
-            } else if let data = data {
-                do {
-                    let result = try self.decoder.decode(RepositoryReadme.self, from: data)
-                    completion(.success(result.content))
-                } catch {
-                    completion(.failure(error))
-                }
+                assertionFailure("\(error)")
                 return
             }
+            
+            guard let data = data, let readmeResponse = try? JSONDecoder().decode(RepositoryReadme.self, from: data) else { return }
+            completion(readmeResponse.content)
         }.resume()
     }
+
 }

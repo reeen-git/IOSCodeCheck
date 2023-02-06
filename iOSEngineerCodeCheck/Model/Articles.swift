@@ -54,9 +54,9 @@ struct Owner: Codable {
 }
 
 struct RepositoryReadme: Codable {
-  let content: String
+  let content: String?
 
-  init(content: String) {
+  init(content: String?) {
     self.content = content
   }
 }

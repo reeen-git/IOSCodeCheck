@@ -90,9 +90,6 @@ final class DetailViewController: UIViewController {
     private lazy var readMeView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
-      let css = "body { transform: scale(1.5) !important; transform-origin: 0 0 !important; }"
-        let script = WKUserScript(source: "var style = document.createElement('style'); style.innerHTML = '\(css)'; document.head.appendChild(style);", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-        webView.configuration.userContentController.addUserScript(script)
         webView.isOpaque = false
         webView.backgroundColor = .black
         webView.tintColor = .white
@@ -252,21 +249,22 @@ private extension DetailViewController {
 extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
         guard let repository else { return }
-        ApiCaller.shared.fetchReadme(repository: repository) { result in
-            switch result {
-            case .success(let data):
-                self.displayMarkdown(input: data)
-            case .failure(let error):
-                assertionFailure("error: \(error.localizedDescription)")
-            }
+        ApiCaller.shared.fetchReadme(repository: repository) { [weak self] content in
+            self?.displayMarkdown(input: content)
         }
     }
     
-    func displayMarkdown(input: String) {
-        guard let decodedData = Data(base64Encoded: input, options: .ignoreUnknownCharacters),
-              let markdown = String(data: decodedData, encoding: .utf8) else { return }
-        let htmlBody = parser.parse(markdown).html
-        self.htmlData = "<html><head><style>body {color: white;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
+    func displayMarkdown(input: String?) {
+        if input != nil {
+            guard let input else { return }
+            guard let decodedData = Data(base64Encoded: input, options: .ignoreUnknownCharacters),
+                  let markdown = String(data: decodedData, encoding: .utf8) else { return }
+            let htmlBody = parser.parse(markdown).html
+            self.htmlData = "<html><head><style>body {color: white;font-size:50px;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
+        } else {
+            self.htmlData = "<html><head><style>body {color: white;font-size: 40px;} </style></head><body> There is no README in this repository. </body></html>"
+        }
+        
         DispatchQueue.main.async { [weak self] in
             self?.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
         }
