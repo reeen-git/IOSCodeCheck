@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class SearchViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
 
 //MARK: - viewDidLoad()で呼ばれるもの
 
-private extension ViewController {
+private extension SearchViewController {
     func setupNavigationController() {
         title = "Github"
         navigationController?.navigationBar.backgroundColor = .black
@@ -65,7 +65,7 @@ private extension ViewController {
     }
 }
 
-extension ViewController: UISearchBarDelegate {
+extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text else { return }
         view.endEditing(true)
@@ -85,7 +85,7 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         repository.count
     }

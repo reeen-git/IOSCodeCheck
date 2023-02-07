@@ -120,6 +120,16 @@ final class DetailViewController: UIViewController {
         return button
     }()
     
+    private let favoriteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("+ お気に入りに追加", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
+        button.configuration = .gray()
+        button.addTarget(.none, action: #selector(addToFavourites), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var webButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [backToReadMeButton, backButton, forwardButton])
         stackView.distribution = .fillEqually
@@ -129,7 +139,7 @@ final class DetailViewController: UIViewController {
     }()
     
     private lazy var headerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView, favoriteButton])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
@@ -149,13 +159,13 @@ final class DetailViewController: UIViewController {
     }()
     
     private let parser = MarkdownParser()
+    var userDefaults = UserDefaults.standard
+    var repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] ?? [Data]()
     var repository: Repository?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setTexts()
         setupViews()
-        getImage()
         getReadMeData()
     }
 }
@@ -164,6 +174,9 @@ final class DetailViewController: UIViewController {
 
 private extension DetailViewController {
     func setupViews() {
+        setTexts()
+        setImage()
+        
         view.backgroundColor = .black
         self.overrideUserInterfaceStyle = .dark
        
@@ -179,7 +192,7 @@ private extension DetailViewController {
         avorImageView.snp.makeConstraints { make in
             make.top.equalTo(guide)
             make.size.equalTo(CGSize(width: 30, height: 30))
-            make.leading.equalToSuperview().offset(5)
+            make.leading.equalToSuperview().offset(10)
         }
         
         createrLabel.snp.makeConstraints { make in
@@ -223,7 +236,7 @@ private extension DetailViewController {
         createrLabel.text = createrName
     }
     
-    func getImage(){
+    func setImage() {
         titleLabel.text = repository?.fullName
         if let imgURL = repository?.avatarImageUrl {
             URLSession.shared.dataTask(with: imgURL) { (data, res, err) in
@@ -294,4 +307,14 @@ extension DetailViewController: WKUIDelegate {
            }
            return nil
        }
+}
+
+extension DetailViewController {
+    @objc func addToFavourites() {
+        guard let repository else { return }
+        if let encodedData = try? JSONEncoder().encode(repository) {
+            repositoryData.append(encodedData)
+            userDefaults.set(repositoryData, forKey: "repository")
+        }
+    }
 }
