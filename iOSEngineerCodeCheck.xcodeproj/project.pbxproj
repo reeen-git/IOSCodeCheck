@@ -11,12 +11,18 @@
 		4B422603298D155C006D463C /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B422602298D155C006D463C /* UIView+.swift */; };
 		4B422605298D2ECF006D463C /* GitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B422604298D2ECF006D463C /* GitTableViewCell.swift */; };
 		4B422608298E4777006D463C /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = 4B422607298E4777006D463C /* SFSafeSymbols */; };
+		4B422616298FDA54006D463C /* Ink in Frameworks */ = {isa = PBXBuildFile; productRef = 4B422615298FDA54006D463C /* Ink */; };
 		4BA578D5298D0349007739AB /* Articles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA578D4298D0349007739AB /* Articles.swift */; };
 		4BA578D7298D0350007739AB /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA578D6298D0350007739AB /* ApiCaller.swift */; };
+		4BBECADC2992A0D8005CD55E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECADB2992A0D8005CD55E /* MainViewController.swift */; };
+		4BBECADE2992A1F2005CD55E /* FavoriteRepositoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */; };
+		4BBECAE12992A977005CD55E /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECAE02992A976005CD55E /* MainNavigationController.swift */; };
+		4BBECAED2993BD72005CD55E /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBECAEC2993BD72005CD55E /* RxCocoa */; };
+		4BBECAEF2993BD72005CD55E /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBECAEE2993BD72005CD55E /* RxSwift */; };
 		BF0A658D244F2A3B00280FA6 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */; };
 		BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945DE244DC5E80012785A /* AppDelegate.swift */; };
 		BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E0244DC5E80012785A /* SceneDelegate.swift */; };
-		BFD945E3244DC5E80012785A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E2244DC5E80012785A /* ViewController.swift */; };
+		BFD945E3244DC5E80012785A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E2244DC5E80012785A /* SearchViewController.swift */; };
 		BFD945E8244DC5EB0012785A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E7244DC5EB0012785A /* Assets.xcassets */; };
 		BFD945EB244DC5EB0012785A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFD945E9244DC5EB0012785A /* LaunchScreen.storyboard */; };
 		BFD945F6244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945F5244DC5EB0012785A /* iOSEngineerCodeCheckTests.swift */; };
@@ -45,11 +51,14 @@
 		4B422604298D2ECF006D463C /* GitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitTableViewCell.swift; sourceTree = "<group>"; };
 		4BA578D4298D0349007739AB /* Articles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Articles.swift; sourceTree = "<group>"; };
 		4BA578D6298D0350007739AB /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
+		4BBECADB2992A0D8005CD55E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRepositoryViewController.swift; sourceTree = "<group>"; };
+		4BBECAE02992A976005CD55E /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEngineerCodeCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFD945DE244DC5E80012785A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFD945E0244DC5E80012785A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BFD945E2244DC5E80012785A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BFD945E2244DC5E80012785A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		BFD945E7244DC5EB0012785A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFD945EA244DC5EB0012785A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFD945EC244DC5EB0012785A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -67,6 +76,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B422608298E4777006D463C /* SFSafeSymbols in Frameworks */,
+				4B422616298FDA54006D463C /* Ink in Frameworks */,
+				4BBECAEF2993BD72005CD55E /* RxSwift in Frameworks */,
+				4BBECAED2993BD72005CD55E /* RxCocoa in Frameworks */,
 				4B422600298D115A006D463C /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,9 +111,11 @@
 		4BA578D1298D0318007739AB /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				BFD945E2244DC5E80012785A /* ViewController.swift */,
-				BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */,
+				4BBECAE02992A976005CD55E /* MainNavigationController.swift */,
+				4BBECADB2992A0D8005CD55E /* MainViewController.swift */,
 				4B422604298D2ECF006D463C /* GitTableViewCell.swift */,
+				4BBECADF2992A2A7005CD55E /* Search */,
+				4BBECAE229938BA8005CD55E /* Favorite */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -121,6 +135,23 @@
 				4BA578D6298D0350007739AB /* ApiCaller.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		4BBECADF2992A2A7005CD55E /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				BFD945E2244DC5E80012785A /* SearchViewController.swift */,
+				BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		4BBECAE229938BA8005CD55E /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */,
+			);
+			path = Favorite;
 			sourceTree = "<group>";
 		};
 		BFD945D2244DC5E80012785A = {
@@ -195,6 +226,9 @@
 			packageProductDependencies = (
 				4B4225FF298D115A006D463C /* SnapKit */,
 				4B422607298E4777006D463C /* SFSafeSymbols */,
+				4B422615298FDA54006D463C /* Ink */,
+				4BBECAEC2993BD72005CD55E /* RxCocoa */,
+				4BBECAEE2993BD72005CD55E /* RxSwift */,
 			);
 			productName = iOSEngineerCodeCheck;
 			productReference = BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */;
@@ -271,6 +305,8 @@
 			packageReferences = (
 				4B4225FE298D115A006D463C /* XCRemoteSwiftPackageReference "SnapKit" */,
 				4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
+				4B422614298FDA54006D463C /* XCRemoteSwiftPackageReference "Ink" */,
+				4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = BFD945DC244DC5E80012785A /* Products */;
 			projectDirPath = "";
@@ -314,12 +350,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFD945E3244DC5E80012785A /* ViewController.swift in Sources */,
+				BFD945E3244DC5E80012785A /* SearchViewController.swift in Sources */,
 				4BA578D5298D0349007739AB /* Articles.swift in Sources */,
 				4B422603298D155C006D463C /* UIView+.swift in Sources */,
+				4BBECAE12992A977005CD55E /* MainNavigationController.swift in Sources */,
 				BF0A658D244F2A3B00280FA6 /* DetailViewController.swift in Sources */,
+				4BBECADE2992A1F2005CD55E /* FavoriteRepositoryViewController.swift in Sources */,
 				BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */,
 				BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */,
+				4BBECADC2992A0D8005CD55E /* MainViewController.swift in Sources */,
 				4BA578D7298D0350007739AB /* ApiCaller.swift in Sources */,
 				4B422605298D2ECF006D463C /* GitTableViewCell.swift in Sources */,
 			);
@@ -660,6 +699,22 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		4B422614298FDA54006D463C /* XCRemoteSwiftPackageReference "Ink" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/Ink";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.5.1;
+			};
+		};
+		4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -672,6 +727,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
 			productName = SFSafeSymbols;
+		};
+		4B422615298FDA54006D463C /* Ink */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B422614298FDA54006D463C /* XCRemoteSwiftPackageReference "Ink" */;
+			productName = Ink;
+		};
+		4BBECAEC2993BD72005CD55E /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		4BBECAEE2993BD72005CD55E /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
