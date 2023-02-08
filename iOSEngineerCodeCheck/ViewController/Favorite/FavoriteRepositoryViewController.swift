@@ -8,18 +8,23 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
-class FavoriteRepositoryViewController: UIViewController {
-    private lazy var favoriteTabiewView: UITableView = {
-       let tableView = UITableView()
+final class FavoriteRepositoryViewController: UIViewController {
+    lazy var favoriteTabiewView: UITableView = {
+        let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
         return tableView
     }()
     
-    private var repositories = [Repository]()
-    private let detailViewController = DetailViewController()
-
+    var repositories: [Repository] = []
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated), name: Notification.Name("favoritesUpdated"), object: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadFavoriteRepositorys()
@@ -44,9 +49,17 @@ extension FavoriteRepositoryViewController {
         self.overrideUserInterfaceStyle = .dark
         view.backgroundColor = .black
         view.addSubview(favoriteTabiewView)
-    
+        
         favoriteTabiewView.snp.makeConstraints { make in
             make.edges.equalTo(guide)
+        }
+    }
+    
+    @objc func favoritesUpdated() {
+        repositories.removeAll()
+        self.loadFavoriteRepositorys()
+        DispatchQueue.main.async {
+            self.favoriteTabiewView.reloadData()
         }
     }
 }

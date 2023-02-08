@@ -17,6 +17,8 @@
 		4BBECADC2992A0D8005CD55E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECADB2992A0D8005CD55E /* MainViewController.swift */; };
 		4BBECADE2992A1F2005CD55E /* FavoriteRepositoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */; };
 		4BBECAE12992A977005CD55E /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBECAE02992A976005CD55E /* MainNavigationController.swift */; };
+		4BBECAED2993BD72005CD55E /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBECAEC2993BD72005CD55E /* RxCocoa */; };
+		4BBECAEF2993BD72005CD55E /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBECAEE2993BD72005CD55E /* RxSwift */; };
 		BF0A658D244F2A3B00280FA6 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */; };
 		BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945DE244DC5E80012785A /* AppDelegate.swift */; };
 		BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E0244DC5E80012785A /* SceneDelegate.swift */; };
@@ -75,6 +77,8 @@
 			files = (
 				4B422608298E4777006D463C /* SFSafeSymbols in Frameworks */,
 				4B422616298FDA54006D463C /* Ink in Frameworks */,
+				4BBECAEF2993BD72005CD55E /* RxSwift in Frameworks */,
+				4BBECAED2993BD72005CD55E /* RxCocoa in Frameworks */,
 				4B422600298D115A006D463C /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,6 +227,8 @@
 				4B4225FF298D115A006D463C /* SnapKit */,
 				4B422607298E4777006D463C /* SFSafeSymbols */,
 				4B422615298FDA54006D463C /* Ink */,
+				4BBECAEC2993BD72005CD55E /* RxCocoa */,
+				4BBECAEE2993BD72005CD55E /* RxSwift */,
 			);
 			productName = iOSEngineerCodeCheck;
 			productReference = BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */;
@@ -300,6 +306,7 @@
 				4B4225FE298D115A006D463C /* XCRemoteSwiftPackageReference "SnapKit" */,
 				4B422606298E4777006D463C /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				4B422614298FDA54006D463C /* XCRemoteSwiftPackageReference "Ink" */,
+				4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = BFD945DC244DC5E80012785A /* Products */;
 			projectDirPath = "";
@@ -700,6 +707,14 @@
 				minimumVersion = 0.5.1;
 			};
 		};
+		4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -717,6 +732,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4B422614298FDA54006D463C /* XCRemoteSwiftPackageReference "Ink" */;
 			productName = Ink;
+		};
+		4BBECAEC2993BD72005CD55E /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		4BBECAEE2993BD72005CD55E /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBECAEB2993BD72005CD55E /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

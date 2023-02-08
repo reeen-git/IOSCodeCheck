@@ -20,7 +20,7 @@ class MainViewController: UITabBarController {
         
         let favoriteRepositoryViewController = MainNavigationController(rootViewController: FavoriteRepositoryViewController())
         favoriteRepositoryViewController.tabBarItem = UITabBarItem(title: "Favorite", image: .none, tag: 1)
-
+        
         viewControllers = [searchViewController, favoriteRepositoryViewController]
         setViewControllers(viewControllers, animated: false)
     }

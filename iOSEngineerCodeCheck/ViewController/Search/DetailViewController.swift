@@ -11,6 +11,8 @@ import WebKit
 import SnapKit
 import SFSafeSymbols
 import Ink
+import RxSwift
+import RxCocoa
 
 final class DetailViewController: UIViewController {
     private var htmlData = ""
@@ -135,6 +137,7 @@ final class DetailViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.axis = .horizontal
         stackView.alignment = .fill
+        stackView.backgroundColor = .secondarySystemFill
         return stackView
     }()
     
@@ -159,6 +162,7 @@ final class DetailViewController: UIViewController {
     }()
     
     private let parser = MarkdownParser()
+    private let favoriteView = FavoriteRepositoryViewController()
     var userDefaults = UserDefaults.standard
     var repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] ?? [Data]()
     var repository: Repository?
@@ -316,5 +320,6 @@ extension DetailViewController {
             repositoryData.append(encodedData)
             userDefaults.set(repositoryData, forKey: "repository")
         }
+        NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
     }
 }
