@@ -109,9 +109,9 @@
 			children = (
 				4BBECAE02992A976005CD55E /* MainNavigationController.swift */,
 				4BBECADB2992A0D8005CD55E /* MainViewController.swift */,
-				4BBECADF2992A2A7005CD55E /* Search */,
 				4B422604298D2ECF006D463C /* GitTableViewCell.swift */,
-				4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */,
+				4BBECADF2992A2A7005CD55E /* Search */,
+				4BBECAE229938BA8005CD55E /* Favorite */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -140,6 +140,14 @@
 				BF0A658C244F2A3B00280FA6 /* DetailViewController.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		4BBECAE229938BA8005CD55E /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				4BBECADD2992A1F2005CD55E /* FavoriteRepositoryViewController.swift */,
+			);
+			path = Favorite;
 			sourceTree = "<group>";
 		};
 		BFD945D2244DC5E80012785A = {
