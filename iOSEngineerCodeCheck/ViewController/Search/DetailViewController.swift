@@ -122,9 +122,8 @@ final class DetailViewController: UIViewController {
         return button
     }()
     
-    private let favoriteButton: UIButton = {
+    private var favoriteButton: UIButton = {
         let button = UIButton()
-        button.setTitle("+ お気に入りに追加", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
         button.configuration = .gray()
@@ -171,6 +170,7 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         getReadMeData()
+        isFavoriteButtonAlreadyTapped()
     }
 }
 
@@ -183,7 +183,7 @@ private extension DetailViewController {
         
         view.backgroundColor = .black
         self.overrideUserInterfaceStyle = .dark
-       
+        
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
         view.addSubview(avorImageView)
@@ -306,20 +306,38 @@ extension DetailViewController: WKUIDelegate {
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-           if navigationAction.targetFrame == nil {
-               readMeView.load(navigationAction.request)
-           }
-           return nil
-       }
+        if navigationAction.targetFrame == nil {
+            readMeView.load(navigationAction.request)
+        }
+        return nil
+    }
 }
 
 extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
+        isFavoriteButtonAlreadyTapped()
         if let encodedData = try? JSONEncoder().encode(repository) {
             repositoryData.append(encodedData)
             userDefaults.set(repositoryData, forKey: "repository")
         }
         NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
+    }
+    
+    func isFavoriteButtonAlreadyTapped() {
+        guard let repository else { return }
+        let repositoryId = repository.id
+        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        
+        if favorites.contains(repositoryId) {
+            self.favoriteButton.setTitle("お気に入りに追加済み", for: .normal)
+            self.favoriteButton.isEnabled = false
+            self.favoriteButton.isSelected = false
+        } else {
+            self.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
+            favorites.append(repositoryId)
+            UserDefaults.standard.set(favorites, forKey: "favorites")
+            NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
+        }
     }
 }
