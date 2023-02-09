@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import RxSwift
 
 final class FavoriteRepositoryViewController: UIViewController {
     lazy var favoriteTabiewView: UITableView = {
@@ -29,10 +28,17 @@ final class FavoriteRepositoryViewController: UIViewController {
         super.viewDidLoad()
         loadFavoriteRepositorys()
         setupView()
+        setupNavigationController()
     }
 }
 
 extension FavoriteRepositoryViewController {
+    func setupNavigationController() {
+        title = "GithubRepos"
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+    }
+    
     func loadFavoriteRepositorys() {
         if let repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] {
             for data in repositoryData {
