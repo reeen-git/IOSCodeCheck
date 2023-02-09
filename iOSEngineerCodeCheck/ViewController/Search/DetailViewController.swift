@@ -332,7 +332,7 @@ extension DetailViewController {
             self.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
             favorites.append(repositoryId)
             userDefaults.set(favorites, forKey: "favorites")
-            userDefaults.post(name: Notification.Name("favoritesUpdated"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
         }
     }
 }

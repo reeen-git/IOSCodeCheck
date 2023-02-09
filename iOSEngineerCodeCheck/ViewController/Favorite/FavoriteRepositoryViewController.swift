@@ -36,7 +36,7 @@ final class FavoriteRepositoryViewController: UIViewController {
 
 extension FavoriteRepositoryViewController {
     func setupNavigationController() {
-        title = "GithubRepos"
+        title = "Favorites"
         navigationController?.navigationBar.backgroundColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
     }

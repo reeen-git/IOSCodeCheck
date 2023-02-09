@@ -40,7 +40,7 @@ class SearchViewController: UIViewController {
 
 private extension SearchViewController {
     func setupNavigationController() {
-        title = "GithubRepos"
+        title = "Search"
         navigationController?.navigationBar.backgroundColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
     }
