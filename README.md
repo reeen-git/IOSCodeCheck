@@ -26,7 +26,7 @@ _________________
 #### ・できたこと  
 (参考１：[プルリク1](https://github.com/reeen-git/iOSCodeCheck/pull/13))  
 (参考２：[プルリク2](https://github.com/reeen-git/iOSCodeCheck/pull/14))  
-(参考３：[プルリク３](https://github.com/reeen-git/iOSCodeCheck/pull/15))
+(参考３：[プルリク3](https://github.com/reeen-git/iOSCodeCheck/pull/15))
 　　　
 - FatVCの回避  
   Modelを切り出し、APIを呼び出す責務をVCから分離
