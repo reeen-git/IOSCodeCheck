@@ -26,11 +26,13 @@ final class FavoriteRepositoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationController()
         loadFavoriteRepositorys()
         setupView()
-        setupNavigationController()
     }
 }
+
+//MARK: - viewDidLoad()で呼ばれるもの
 
 extension FavoriteRepositoryViewController {
     func setupNavigationController() {
@@ -70,6 +72,7 @@ extension FavoriteRepositoryViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension FavoriteRepositoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         repositories.count

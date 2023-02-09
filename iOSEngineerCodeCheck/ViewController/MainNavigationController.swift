@@ -14,13 +14,6 @@ class MainNavigationController: UINavigationController {
         super.viewDidLoad()
         navigationBar.barTintColor = UIColor.black
         navigationBar.tintColor = UIColor.white
-
         navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    }
- 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
- 
+    } 
 }

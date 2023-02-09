@@ -253,6 +253,8 @@ private extension DetailViewController {
     }
 }
 
+//MARK: - WKUIDelegateのメゾット
+
 extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
         guard let repository else { return }
@@ -303,6 +305,8 @@ extension DetailViewController: WKUIDelegate {
     }
 }
 
+//MARK: - お気に入りリポジトリ追加機能部分
+
 extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
@@ -314,6 +318,7 @@ extension DetailViewController {
         NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
     }
     
+    // ボタンが一度押下された場合にボタンをタップできないようにする処理が書けませんでした。
     func isFavoriteButtonAlreadyTapped() {
         guard let repository else { return }
         let repositoryId = repository.id

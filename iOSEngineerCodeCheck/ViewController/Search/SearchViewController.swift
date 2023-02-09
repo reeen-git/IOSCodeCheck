@@ -65,6 +65,8 @@ private extension SearchViewController {
     }
 }
 
+//MARK: - UISearchBarDelegate
+
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text else { return }
@@ -84,6 +86,8 @@ extension SearchViewController: UISearchBarDelegate {
         }
     }
 }
+
+//MARK: - UITableViewDelegate, UITableViewDataSource
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

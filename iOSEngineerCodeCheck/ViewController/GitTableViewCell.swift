@@ -100,6 +100,7 @@ final class GitTableViewCell: UITableViewCell {
 }
 
 //MARK: - viewDidLoad()で呼ばれるもの
+
 private extension GitTableViewCell {
     func setupViews() {
         addSubview(entireStackView)
