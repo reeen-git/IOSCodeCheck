@@ -152,7 +152,6 @@ final class DetailViewController: UIViewController {
     }()
     
     private let parser = MarkdownParser()
-    private let favoriteView = FavoriteRepositoryViewController()
     var userDefaults = UserDefaults.standard
     var repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] ?? [Data]()
     var repository: Repository?
@@ -307,7 +306,7 @@ extension DetailViewController: WKUIDelegate {
 
 //MARK: - お気に入りリポジトリ追加機能部分
 
-extension DetailViewController {
+private extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
         isFavoriteButtonAlreadyTapped()
@@ -319,6 +318,8 @@ extension DetailViewController {
     }
     
     // ボタンが一度押下された場合にボタンをタップできないようにする処理が書けませんでした。
+    //この関数をViewControllerで読んでいるのが原因だと考え、UserDefaultsやAppDelegateなどを用いてアプリ実行時に１度のみ呼ばれる（既に回答済みのものを再度回答できないようにするため）ように記述を行いましたが。期待する挙動には至りませんでした。
+    
     func isFavoriteButtonAlreadyTapped() {
         guard let repository else { return }
         let repositoryId = repository.id

@@ -34,7 +34,7 @@ final class FavoriteRepositoryViewController: UIViewController {
 
 //MARK: - viewDidLoad()で呼ばれるもの
 
-extension FavoriteRepositoryViewController {
+private extension FavoriteRepositoryViewController {
     func setupNavigationController() {
         title = "Favorites"
         navigationController?.navigationBar.backgroundColor = .black

@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -28,7 +28,6 @@ class SearchViewController: UIViewController {
     }()
     
     private var repository = [Repository]()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
