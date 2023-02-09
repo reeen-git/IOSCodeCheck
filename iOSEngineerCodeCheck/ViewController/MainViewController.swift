@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UITabBarController {
+final class MainViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()

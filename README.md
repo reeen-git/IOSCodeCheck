@@ -1,46 +1,52 @@
 # 株式会社ゆめみ iOS エンジニアコードチェック課題
-
-## 概要
-
-本プロジェクトは株式会社ゆめみ（以下弊社）が、弊社に iOS エンジニアを希望する方に出す課題のベースプロジェクトです。本課題が与えられた方は、下記の概要を詳しく読んだ上で課題を取り組んでください。
-
-## アプリ仕様
-
-本アプリは GitHub のリポジトリーを検索するアプリです。
-
-![動作イメージ](README_Images/app.gif)
-
-### 環境
-
-- IDE：基本最新の安定版（本概要更新時点では Xcode 14.1）
-- Swift：基本最新の安定版（本概要更新時点では Swift 5.7）
-- 開発ターゲット：基本最新の安定版（本概要更新時点では iOS 16.1）
-- サードパーティーライブラリーの利用：オープンソースのものに限り制限しない
-
-### 動作
-
-1. 何かしらのキーワードを入力
-2. GitHub API（`search/repositories`）でリポジトリーを検索し、結果一覧を概要（リポジトリ名）で表示
-3. 特定の結果を選択したら、該当リポジトリの詳細（リポジトリ名、オーナーアイコン、プロジェクト言語、Star 数、Watcher 数、Fork 数、Issue 数）を表示
-
-## 課題取り組み方法
-
-Issues を確認した上、本プロジェクトを [**Duplicate** してください](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/duplicating-a-repository)（Fork しないようにしてください。必要ならプライベートリポジトリーにしても大丈夫です）。今後のコミットは全てご自身のリポジトリーで行ってください。
-
-コードチェックの課題 Issue は全て [`課題`](https://github.com/yumemi/ios-engineer-codecheck/milestone/1) Milestone がついており、難易度に応じて Label が [`初級`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3A初級+milestone%3A課題)、[`中級`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3A中級+milestone%3A課題+) と [`ボーナス`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3Aボーナス+milestone%3A課題+) に分けられています。課題の必須／選択は下記の表とします：
-
-|   | 初級 | 中級 | ボーナス
-|--:|:--:|:--:|:--:|
-| 新卒／未経験者 | 必須 | 選択 | 選択 |
-| 中途／経験者 | 必須 | 必須 | 選択 |
-
-
-課題 Issueをご自身のリポジトリーにコピーするGitHub Actionsをご用意しております。  
-[こちらのWorkflow](./.github/workflows/copy-issues.yml)を[手動でトリガーする](https://docs.github.com/ja/actions/managing-workflow-runs/manually-running-a-workflow)ことでコピーできますのでご活用下さい。
-
-課題が完成したら、リポジトリーのアドレスを教えてください。
-
-## 参考記事
-
-提出された課題の評価ポイントに関しては、[こちらの記事](https://qiita.com/lovee/items/d76c68341ec3e7beb611)に詳しく書かれてありますので、ぜひご覧ください。
-ライブラリの利用に関しては [こちらの記事](https://qiita.com/ykws/items/b951a2e24ca85013e722)も参照ください。
+   
+#### 使用ライブラリ（SwiftPackageManagerを使用）   
+[Ink](https://github.com/vadimdemedes/ink)  
+[SFSafeSymbols](https://github.com/SFSafeSymbols/SFSafeSymbols)  
+[SnapKit](https://github.com/SnapKit/SnapKit)
+  
+_________________
+  
+#### ・工夫した点
+- StoryBoardを使わない開発手法に移行しました。  
+   これにより、コードレビューのしやすさ & AutoLayoutのコンフリクト部分の判定のし易さを向上させました。
+   
+- READMEを表示させる機能を追加 
+   READMEが当該リポジトリについて一番詳しく説明が書いているはずであるので、それを表示しユーザーがそれが何なのかわかりやすいようにしました。
+  
+- WKWebViewの中のブラウザバッグなどに対応したオブジェクトを設置した。
+  READMEには大抵URLが埋め込まれているので、それに対応しさらにユーザーのアプリ使用体験を向上させました。
+  
+- お気に入り登録機能の追加
+  お気に入り登録機能を追加し、ユーザーのお気に入りのリポジトリにすぐに飛べるようにしました。  
+  （しかし下記問題が生じてしまいました。）
+  
+_________________
+  
+#### ・できたこと  
+(参考１：[プルリク1](https://github.com/reeen-git/iOSCodeCheck/pull/13))  
+(参考２：[プルリク2](https://github.com/reeen-git/iOSCodeCheck/pull/14))  
+(参考３：[プルリク３](https://github.com/reeen-git/iOSCodeCheck/pull/15))
+　　　
+- FatVCの回避  
+  Modelを切り出し、APIを呼び出す責務をVCから分離
+   
+- コードの可読性の向上  
+ Markの適用、extensionでの分離、StoryBoardを使用しないAutoLayou(コードレビューのしやすさを向上)
+    
+- コードの安全性の向上  
+  guard文の使用による想定外のnilの潰し、強制アンラップ・強制ダウンキャストの未使用化
+ 
+ - バグを修正  
+   StoryBoardを廃止、Modelの実装、メモリリーク（未実装）
+  
+ - UIをブラッシュアップ、新機能の追加  
+   READMEを表示する機能の追加・お気に入り機能の追加及びUserDefaultsの追加
+    
+#### ・できなかったこと   
+- DetailViewのfavoriteButtonの挙動  
+   ViewDidLoad()が複数回呼ばれてしまうと、ボタンが予期せぬ動きをしてしまい、一度押下したボタンを再度押下するのを防ぐ処理ができませんでした。  
+   (リポジトリを検索して、一度CellをタップしDetailViewを表示するのは上手く表示されますが、一度SearchViewControllerに戻り再度Cellに飛ぶとボタンが変化してしまう状況です。)
+   
+- リポジトリの言語によって、CellのImageViewの色を変える部分  
+  もう少し、美しく書くべきだと考え様々試しましたが、実装ができませんでした。

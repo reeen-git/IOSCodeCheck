@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import RxSwift
 
 final class FavoriteRepositoryViewController: UIViewController {
     lazy var favoriteTabiewView: UITableView = {
@@ -27,12 +26,21 @@ final class FavoriteRepositoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationController()
         loadFavoriteRepositorys()
         setupView()
     }
 }
 
-extension FavoriteRepositoryViewController {
+//MARK: - viewDidLoad()で呼ばれるもの
+
+private extension FavoriteRepositoryViewController {
+    func setupNavigationController() {
+        title = "Favorites"
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+    }
+    
     func loadFavoriteRepositorys() {
         if let repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] {
             for data in repositoryData {
@@ -64,6 +72,7 @@ extension FavoriteRepositoryViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension FavoriteRepositoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         repositories.count

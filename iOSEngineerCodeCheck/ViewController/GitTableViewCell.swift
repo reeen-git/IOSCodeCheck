@@ -34,15 +34,15 @@ final class GitTableViewCell: UITableViewCell {
     
     private let languageLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .light)
-        label.textColor = .white
+        label.font = .systemFont(ofSize: 15, weight: .light)
+        label.textColor = .lightGray
         return label
     }()
     
     private let starsCountLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .white
+        label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.textColor = .lightGray
         return label
     }()
     
@@ -57,8 +57,8 @@ final class GitTableViewCell: UITableViewCell {
     private let starImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemSymbol: .starFill)
-        imageView.tintColor = .yellow
+        imageView.image = UIImage(systemSymbol: .star)
+        imageView.tintColor = .lightGray
         return imageView
     }()
     
@@ -100,6 +100,7 @@ final class GitTableViewCell: UITableViewCell {
 }
 
 //MARK: - viewDidLoad()で呼ばれるもの
+
 private extension GitTableViewCell {
     func setupViews() {
         addSubview(entireStackView)

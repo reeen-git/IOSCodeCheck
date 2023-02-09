@@ -11,8 +11,6 @@ import WebKit
 import SnapKit
 import SFSafeSymbols
 import Ink
-import RxSwift
-import RxCocoa
 
 final class DetailViewController: UIViewController {
     private var htmlData = ""
@@ -29,13 +27,6 @@ final class DetailViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .heavy)
-        label.textColor = .white
-        return label
-    }()
-    
-    private let languageLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textColor = .white
         return label
     }()
@@ -141,7 +132,7 @@ final class DetailViewController: UIViewController {
     }()
     
     private lazy var headerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, languageLabel, discriptionTextView, countStackView, favoriteButton])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, discriptionTextView, countStackView, favoriteButton])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
@@ -161,7 +152,6 @@ final class DetailViewController: UIViewController {
     }()
     
     private let parser = MarkdownParser()
-    private let favoriteView = FavoriteRepositoryViewController()
     var userDefaults = UserDefaults.standard
     var repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] ?? [Data]()
     var repository: Repository?
@@ -233,7 +223,6 @@ private extension DetailViewController {
     func setTexts() {
         guard let repository else { return }
         guard let createrName = repository.fullName.components(separatedBy: "/").first else { return }
-        languageLabel.text = "Written in \(repository.language ?? "")"
         starsCountLabel.text = "\(repository.stargazersCount) Star"
         forkCountLabel.text = "\(repository.forksCount) フォーク"
         discriptionTextView.text = repository.description
@@ -243,11 +232,11 @@ private extension DetailViewController {
     func setImage() {
         titleLabel.text = repository?.fullName
         if let imgURL = repository?.avatarImageUrl {
-            URLSession.shared.dataTask(with: imgURL) { (data, res, err) in
+            URLSession.shared.dataTask(with: imgURL) { [weak self] (data, res, err) in
                 guard let data else { return }
                 guard let image = UIImage(data: data) else { return }
                 DispatchQueue.main.async {
-                    self.avorImageView.image = image
+                    self?.avorImageView.image = image
                 }
             }.resume()
         }
@@ -262,6 +251,8 @@ private extension DetailViewController {
         }
     }
 }
+
+//MARK: - WKUIDelegateのメゾット
 
 extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
@@ -313,7 +304,9 @@ extension DetailViewController: WKUIDelegate {
     }
 }
 
-extension DetailViewController {
+//MARK: - お気に入りリポジトリ追加機能部分
+
+private extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
         isFavoriteButtonAlreadyTapped()
@@ -323,6 +316,9 @@ extension DetailViewController {
         }
         NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
     }
+    
+    // ボタンが一度押下された場合にボタンをタップできないようにする処理が書けませんでした。
+    //この関数をViewControllerで読んでいるのが原因だと考え、UserDefaultsやAppDelegateなどを用いてアプリ実行時に１度のみ呼ばれる（既に回答済みのものを再度回答できないようにするため）ように記述を行いましたが。期待する挙動には至りませんでした。
     
     func isFavoriteButtonAlreadyTapped() {
         guard let repository else { return }
@@ -336,7 +332,7 @@ extension DetailViewController {
         } else {
             self.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
             favorites.append(repositoryId)
-            UserDefaults.standard.set(favorites, forKey: "favorites")
+            userDefaults.set(favorites, forKey: "favorites")
             NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
         }
     }
