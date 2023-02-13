@@ -1,9 +1,11 @@
 # 株式会社ゆめみ iOS エンジニアコードチェック課題
    
-2/13 追記
-[提出後の修正](https://github.com/reeen-git/iOSCodeCheck/pull/1５)　　
-
-#### 使用ライブラリ（SwiftPackageManagerを使用）   
+#### ＊2/13 追記
+[提出後の修正](https://github.com/reeen-git/iOSCodeCheck/pull/16)　　
+  
+_________________
+  
+#### ・使用ライブラリ（SwiftPackageManagerを使用）   
 [Ink](https://github.com/vadimdemedes/ink)  
 [SFSafeSymbols](https://github.com/SFSafeSymbols/SFSafeSymbols)  
 [SnapKit](https://github.com/SnapKit/SnapKit)
