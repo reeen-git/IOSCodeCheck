@@ -47,7 +47,6 @@ private extension SearchViewController {
     func setupView() {
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
         tableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
-        self.overrideUserInterfaceStyle = .dark
         view.backgroundColor = .black
         view.addSubview(tableView)
         view.addSubview(searchBar)

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 final class FavoriteRepositoryViewController: UIViewController {
-    lazy var favoriteTabiewView: UITableView = {
+    lazy var favoriteTableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -53,12 +53,12 @@ private extension FavoriteRepositoryViewController {
     
     func setupView() {
         guard let guide = view.rootSafeAreaLayoutGuide else { return }
-        favoriteTabiewView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
+        favoriteTableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
         self.overrideUserInterfaceStyle = .dark
         view.backgroundColor = .black
-        view.addSubview(favoriteTabiewView)
+        view.addSubview(favoriteTableView)
         
-        favoriteTabiewView.snp.makeConstraints { make in
+        favoriteTableView.snp.makeConstraints { make in
             make.edges.equalTo(guide)
         }
     }
@@ -67,7 +67,7 @@ private extension FavoriteRepositoryViewController {
         repositories.removeAll()
         self.loadFavoriteRepositorys()
         DispatchQueue.main.async {
-            self.favoriteTabiewView.reloadData()
+            self.favoriteTableView.reloadData()
         }
     }
 }

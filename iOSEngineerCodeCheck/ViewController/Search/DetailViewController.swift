@@ -158,9 +158,9 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupFavoriteButton()
         setupViews()
         getReadMeData()
-        setupFavoriteButton()
     }
 }
 
@@ -222,16 +222,16 @@ private extension DetailViewController {
     
     func setTexts() {
         guard let repository else { return }
-        guard let createrName = repository.fullName.components(separatedBy: "/").first else { return }
+        titleLabel.text = repository.fullName
         starsCountLabel.text = "\(repository.stargazersCount) Star"
         forkCountLabel.text = "\(repository.forksCount) フォーク"
         discriptionTextView.text = repository.description
-        createrLabel.text = createrName
+        createrLabel.text = repository.owner.login
     }
     
     func setImage() {
-        titleLabel.text = repository?.fullName
-        if let imgURL = repository?.avatarImageUrl {
+        guard let repository else { return }
+        if let imgURL = repository.avatarImageUrl {
             URLSession.shared.dataTask(with: imgURL) { [weak self] (data, res, err) in
                 guard let data else { return }
                 guard let image = UIImage(data: data) else { return }
