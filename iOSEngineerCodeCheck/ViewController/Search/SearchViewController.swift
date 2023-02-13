@@ -67,10 +67,12 @@ private extension SearchViewController {
 
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchWord = searchBar.text else { return }
+        guard let searchWord = searchBar.text,
+              let searchEncodeString = searchWord.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
+
         view.endEditing(true)
         
-        ApiCaller.shared.searchs(with: searchWord) { [weak self] result in
+        ApiCaller.shared.searchs(with: searchEncodeString) { [weak self] result in
             switch result {
             case .success(let repository):
                 self?.repository = repository

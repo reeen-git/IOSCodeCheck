@@ -133,7 +133,8 @@ private extension GitTableViewCell {
         }
     }
     
-    func makeImageTintColor(_ language: String) {
+    func makeImageTintColor(_ language: String?) {
+        guard let language else { return }
         if language == "Swift" {
             circleImage.tintColor = .orange
         } else if language == "C++" {
@@ -157,14 +158,13 @@ private extension GitTableViewCell {
 //MARK: - privateではないもの
 extension GitTableViewCell {
     func configure(with repository: Repository) {
-        guard let language = repository.language else { return }
         let fullName = repository.fullName.components(separatedBy: "/")
         createrLabel.text = fullName[0]
         titleLabel.text = fullName[1]
-        languageLabel.text = language
+        languageLabel.text = repository.language ?? "開発言語の記載なし"
         subTitleLabel.text = repository.description
         starsCountLabel.text = repository.stargazersCount.description
-        makeImageTintColor(language)
+        makeImageTintColor(repository.language)
         
         if let url = repository.avatarImageUrl {
             URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
@@ -174,12 +174,5 @@ extension GitTableViewCell {
                 }
             }.resume()
         }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        titleLabel.text = nil
-        subTitleLabel.text = nil
-        avoterImageView.image = nil
     }
 }
