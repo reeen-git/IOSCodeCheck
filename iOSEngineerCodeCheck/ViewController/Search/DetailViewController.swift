@@ -160,7 +160,7 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         getReadMeData()
-        isFavoriteButtonAlreadyTapped()
+        setupFavoriteButton()
     }
 }
 
@@ -309,31 +309,26 @@ extension DetailViewController: WKUIDelegate {
 private extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
-        isFavoriteButtonAlreadyTapped()
         if let encodedData = try? JSONEncoder().encode(repository) {
             repositoryData.append(encodedData)
             userDefaults.set(repositoryData, forKey: "repository")
         }
+        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        favorites.append(repository.id)
+        UserDefaults.standard.set(favorites, forKey: "favorites")
+        favoriteButton.setTitle("お気に入り済み", for: .normal)
+        favoriteButton.isEnabled = false
         NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
     }
     
-    // ボタンが一度押下された場合にボタンをタップできないようにする処理が書けませんでした。
-    //この関数をViewControllerで読んでいるのが原因だと考え、UserDefaultsやAppDelegateなどを用いてアプリ実行時に１度のみ呼ばれる（既に回答済みのものを再度回答できないようにするため）ように記述を行いましたが。期待する挙動には至りませんでした。
-    
-    func isFavoriteButtonAlreadyTapped() {
+    private func setupFavoriteButton() {
         guard let repository else { return }
-        let repositoryId = repository.id
-        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
-        
-        if favorites.contains(repositoryId) {
-            self.favoriteButton.setTitle("お気に入りに追加済み", for: .normal)
-            self.favoriteButton.isEnabled = false
-            self.favoriteButton.isSelected = false
+        let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        if favorites.contains(repository.id) {
+            favoriteButton.setTitle("お気に入り済み", for: .normal)
+            favoriteButton.isEnabled = false
         } else {
-            self.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
-            favorites.append(repositoryId)
-            userDefaults.set(favorites, forKey: "favorites")
-            NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
+            favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
         }
     }
 }
