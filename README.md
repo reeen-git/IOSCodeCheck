@@ -1,5 +1,8 @@
 # 株式会社ゆめみ iOS エンジニアコードチェック課題
    
+2/13 追記
+[提出後の修正](https://github.com/reeen-git/iOSCodeCheck/pull/1５)　　
+
 #### 使用ライブラリ（SwiftPackageManagerを使用）   
 [Ink](https://github.com/vadimdemedes/ink)  
 [SFSafeSymbols](https://github.com/SFSafeSymbols/SFSafeSymbols)  
@@ -27,7 +30,7 @@ _________________
 (参考１：[プルリク1](https://github.com/reeen-git/iOSCodeCheck/pull/13))  
 (参考２：[プルリク2](https://github.com/reeen-git/iOSCodeCheck/pull/14))  
 (参考３：[プルリク3](https://github.com/reeen-git/iOSCodeCheck/pull/15))
-　　　
+
 - FatVCの回避  
   Modelを切り出し、APIを呼び出す責務をVCから分離
    
