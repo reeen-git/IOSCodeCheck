@@ -49,7 +49,7 @@ _________________
    READMEを表示する機能の追加・お気に入り機能の追加及びUserDefaultsの追加
     
 #### ・できなかったこと   
-- ~~DetailViewのfavoriteButtonの挙動~~  
+- DetailViewのfavoriteButtonの挙動  
    ~~ViewDidLoad()が複数回呼ばれてしまうと、ボタンが予期せぬ動きをしてしまい、一度押下したボタンを再度押下するのを防ぐ処理ができませんでした。  
    (リポジトリを検索して、一度CellをタップしDetailViewを表示するのは上手く表示されますが、一度SearchViewControllerに戻り再度Cellに飛ぶとボタンが変化してしまう状況です。)~~  
    → 提出後の変更で修正済み
