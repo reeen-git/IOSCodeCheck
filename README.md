@@ -2,6 +2,9 @@
    
 #### ＊2/13 追記
 [提出後の修正](https://github.com/reeen-git/iOSCodeCheck/pull/16)　　
+
+#### *2/17 追記
+[前回未修正部分の修正](https://github.com/reeen-git/iOSCodeCheck/pull/17)
   
 _________________
   
