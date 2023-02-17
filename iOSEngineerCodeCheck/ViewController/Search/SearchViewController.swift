@@ -28,6 +28,7 @@ final class SearchViewController: UIViewController {
     }()
     
     private var repository = [Repository]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
