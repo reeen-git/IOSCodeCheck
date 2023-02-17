@@ -10,7 +10,6 @@ import UIKit
 import WebKit
 import SnapKit
 import SFSafeSymbols
-import Ink
 
 final class DetailViewController: UIViewController {
     private var htmlData = ""
@@ -151,9 +150,7 @@ final class DetailViewController: UIViewController {
         return stackView
     }()
     
-    private let parser = MarkdownParser()
-    var userDefaults = UserDefaults.standard
-    var repositoryData = UserDefaults.standard.array(forKey: "repository") as? [Data] ?? [Data]()
+    private let repositoryManager = RepositoryManager()
     var repository: Repository?
     
     override func viewDidLoad() {
@@ -172,7 +169,6 @@ private extension DetailViewController {
         setImage()
         
         view.backgroundColor = .black
-        self.overrideUserInterfaceStyle = .dark
         
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
@@ -263,16 +259,7 @@ extension DetailViewController: WKUIDelegate {
     }
     
     func displayMarkdown(input: String?) {
-        if input != nil {
-            guard let input else { return }
-            guard let decodedData = Data(base64Encoded: input, options: .ignoreUnknownCharacters),
-                  let markdown = String(data: decodedData, encoding: .utf8) else { return }
-            let htmlBody = parser.parse(markdown).html
-            self.htmlData = "<html><head><style>body {color: white;font-size:50px;} a {color: #82bbed;}</style></head><body>\(htmlBody)</body></html>"
-        } else {
-            self.htmlData = "<html><head><style>body {color: white;font-size: 40px;} </style></head><body> There is no README in this repository. </body></html>"
-        }
-        
+        self.htmlData = repositoryManager.decodeReadmeData(input)
         DispatchQueue.main.async { [weak self] in
             self?.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
         }
@@ -309,16 +296,9 @@ extension DetailViewController: WKUIDelegate {
 private extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
-        if let encodedData = try? JSONEncoder().encode(repository) {
-            repositoryData.append(encodedData)
-            userDefaults.set(repositoryData, forKey: "repository")
-        }
-        var favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
-        favorites.append(repository.id)
-        UserDefaults.standard.set(favorites, forKey: "favorites")
+        repositoryManager.setUserDefaults(repository)
         favoriteButton.setTitle("お気に入り済み", for: .normal)
         favoriteButton.isEnabled = false
-        NotificationCenter.default.post(name: Notification.Name("favoritesUpdated"), object: nil)
     }
     
     private func setupFavoriteButton() {
