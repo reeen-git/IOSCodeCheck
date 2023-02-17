@@ -46,7 +46,7 @@ final class GitTableViewCell: UITableViewCell {
         return label
     }()
     
-    private var avoterImageView: UIImageView = {
+    private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
@@ -70,7 +70,7 @@ final class GitTableViewCell: UITableViewCell {
     }()
     
     private lazy var entireStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [avoterImageView, titleLabel, subTitleLabel, countStackView])
+        let stackView = UIStackView(arrangedSubviews: [avatarImageView, titleLabel, subTitleLabel, countStackView])
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .fill
@@ -88,6 +88,8 @@ final class GitTableViewCell: UITableViewCell {
         stackView.spacing = 20
         return stackView
     }()
+    
+    private let repositoryManager = RepositoryManager()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -109,7 +111,7 @@ private extension GitTableViewCell {
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: circleImage, label: languageLabel)
         
-        avoterImageView.snp.makeConstraints { make in
+        avatarImageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 20, height: 20))
         }
         
@@ -119,8 +121,8 @@ private extension GitTableViewCell {
         }
         
         createrLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(avoterImageView)
-            make.leading.equalTo(avoterImageView.snp.trailing).offset(10)
+            make.centerY.equalTo(avatarImageView)
+            make.leading.equalTo(avatarImageView.snp.trailing).offset(10)
         }
     }
     
@@ -134,45 +136,27 @@ private extension GitTableViewCell {
     }
     
     func makeImageTintColor(_ language: String?) {
-        guard let language else { return }
-        if language == "Swift" {
-            circleImage.tintColor = .orange
-        } else if language == "C++" {
-            circleImage.tintColor = .systemPink
-        } else if language == "Python" {
-            circleImage.tintColor = .blue
-        } else if language == "C" {
-            circleImage.tintColor = .darkGray
-        } else if language == "Ruby" {
-            circleImage.tintColor = .red
-        } else if language == "GO" {
-            circleImage.tintColor = .cyan
-        } else if language == "Kotlin" {
-            circleImage.tintColor = .purple
-        } else {
-            circleImage.tintColor = .yellow
-        }
+        let circleImageTintColor = repositoryManager.setCircleColor(language)
+        circleImage.tintColor = circleImageTintColor
     }
 }
 
 //MARK: - privateではないもの
 extension GitTableViewCell {
     func configure(with repository: Repository) {
-        let fullName = repository.fullName.components(separatedBy: "/")
-        createrLabel.text = fullName[0]
-        titleLabel.text = fullName[1]
+        createrLabel.text = repository.owner.login
+        titleLabel.text = repository.name
         languageLabel.text = repository.language ?? "開発言語の記載なし"
         subTitleLabel.text = repository.description
         starsCountLabel.text = repository.stargazersCount.description
         makeImageTintColor(repository.language)
         
-        if let url = repository.avatarImageUrl {
-            URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-                guard let data = data, error == nil else { return }
+        repositoryManager.loadImage(url: repository.avatarImageUrl) { [weak self] image in
+            if let image {
                 DispatchQueue.main.async {
-                    self?.avoterImageView.image = UIImage(data: data)
+                    self?.avatarImageView.image = image
                 }
-            }.resume()
+            }
         }
     }
 }
