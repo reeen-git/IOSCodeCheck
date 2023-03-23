@@ -227,19 +227,6 @@ private extension DetailViewController {
         createrLabel.text = repository.owner.login
     }
     
-    //    func setImage() {
-    //        guard let repository else { return }
-    //        if let imgURL = repository.avatarImageUrl {
-    //            URLSession.shared.dataTask(with: imgURL) { [weak self] (data, res, err) in
-    //                guard let data else { return }
-    //                guard let image = UIImage(data: data) else { return }
-    //                DispatchQueue.main.async {
-    //                    self?.avorImageView.image = image
-    //                }
-    //            }.resume()
-    //        }
-    //    }
-    
     func setImage() async {
         guard let repository else { return }
         do {
