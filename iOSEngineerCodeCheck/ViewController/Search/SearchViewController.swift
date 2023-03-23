@@ -73,16 +73,20 @@ extension SearchViewController: UISearchBarDelegate {
 
         view.endEditing(true)
         
-        ApiCaller.shared.searchs(with: searchEncodeString) { [weak self] result in
-            switch result {
-            case .success(let repository):
-                self?.repository = repository
-                DispatchQueue.main.async {
+        Task {
+            await apiCall(searchEncodeString)
+        }
+        
+        func apiCall(_ text: String) async {
+            do {
+                let result = try await ApiCaller.shared.searchs(with: text)
+                self.repository = result
+                DispatchQueue.main.async { [weak self] in
                     self?.tableView.reloadData()
                     self?.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 }
-            case .failure(let error):
-                assertionFailure("error: \(error.localizedDescription)")
+            } catch {
+                print("error")
             }
         }
     }

@@ -253,8 +253,17 @@ private extension DetailViewController {
 extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
         guard let repository else { return }
-        ApiCaller.shared.fetchReadme(repository: repository) { [weak self] content in
-            self?.displayMarkdown(input: content)
+        Task {
+            await self.getRepositoryData(repository)
+        }
+    }
+    
+    func getRepositoryData(_ repo: Repository) async {
+        do {
+            let data = try await ApiCaller.shared.fetchReadme(repository: repo)
+            self.displayMarkdown(input: data)
+        } catch {
+            print("error")
         }
     }
     

@@ -13,35 +13,19 @@ final class ApiCaller {
     private let decoder = JSONDecoder()
     private let githubUrl = "https://api.github.com/search/repositories?q="
     
-    func searchs(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void) {
+    func searchs(with query: String) async throws -> [Repository] {
         let queryString = query.replacingOccurrences(of: " ", with: "+")
-        guard let searchUrl = URL(string: githubUrl + queryString) else { return }
-        URLSession.shared.dataTask(with: searchUrl) { data, _, error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let data = data {
-                do {
-                    let result = try self.decoder.decode(Articles.self, from: data)
-                    completion(.success(result.items))
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }.resume()
+        guard let searchUrl = URL(string: githubUrl + queryString) else { throw URLError(.badURL) }
+        let (data, _) = try await URLSession.shared.data(from: searchUrl)
+        let result = try decoder.decode(Articles.self, from: data)
+        return result.items
     }
     
-    func fetchReadme(repository: Repository, completion: @escaping (String?) -> Void) {
-        guard let url = URL(string: "https://api.github.com/repos/\(repository.owner.login)/\(repository.name)/readme") else { return }
-
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                assertionFailure("\(error)")
-                return
-            }
-            
-            guard let data = data, let readmeResponse = try? JSONDecoder().decode(RepositoryReadme.self, from: data) else { return }
-            completion(readmeResponse.content)
-        }.resume()
+    func fetchReadme(repository: Repository) async throws -> String? {
+        guard let url = URL(string: "https://api.github.com/repos/\(repository.owner.login)/\(repository.name)/readme") else { throw URLError(.badURL) }
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let result = try decoder.decode(RepositoryReadme.self, from: data)
+        return result.content
     }
-
+    
 }
