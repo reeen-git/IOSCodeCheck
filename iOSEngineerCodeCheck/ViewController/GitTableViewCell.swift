@@ -151,12 +151,19 @@ extension GitTableViewCell {
         starsCountLabel.text = repository.stargazersCount.description
         makeImageTintColor(repository.language)
         
-        repositoryManager.loadImage(url: repository.avatarImageUrl) { [weak self] image in
-            if let image {
-                DispatchQueue.main.async {
-                    self?.avatarImageView.image = image
-                }
+        Task {
+            await getImageData(repository)
+        }
+    }
+    
+    func getImageData(_ repo: Repository) async {
+        do {
+            let image = try await repositoryManager.loadImage(url: repo.avatarImageUrl)
+            DispatchQueue.main.async {
+                self.avatarImageView.image = image
             }
+        } catch {
+            print("error")
         }
     }
 }

@@ -59,21 +59,10 @@ final class RepositoryManager {
         }
     }
     
-    func loadImage(url: URL?, completion: @escaping (UIImage?) -> Void) {
-        guard let url = url else {
-            completion(nil)
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                completion(nil)
-            } else if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            } else {
-                completion(nil)
-            }
-        }.resume()
+    func loadImage(url: URL?) async throws -> UIImage? {
+        guard let url else { throw URLError(.badURL) }
+        let (data, _) = try await URLSession.shared.data(from: url, delegate: nil)
+        let image = UIImage(data: data)
+        return image
     }
 }
