@@ -9,8 +9,6 @@
 import UIKit
 import SnapKit
 
-//TODO: MVCを適用したい → ControllerからUI部分を分離させ、ロジックと繋げる
-
 final class SearchView: UIView {
     var tableView: UITableView = {
         let tableView = UITableView()
