@@ -83,7 +83,6 @@ final class DetailView: UIView {
         webView.backgroundColor = .black
         webView.tintColor = .white
         webView.allowsBackForwardNavigationGestures = true
-       // webView.uiDelegate = self
         return webView
     }()
     
@@ -91,21 +90,18 @@ final class DetailView: UIView {
         let button = UIButton()
         button.setTitle("README", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
-       // button.addTarget(.none, action: #selector(goToReadMe), for: .touchUpInside)
         return button
     }()
     
     let backButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemSymbol: .chevronBackward), for: .normal)
-       // button.addTarget(.none, action: #selector(goBackward), for: .touchUpInside)
         return button
     }()
     
     let forwardButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemSymbol: .chevronForward), for: .normal)
-       // button.addTarget(.none, action: #selector(goFoward), for: .touchUpInside)
         return button
     }()
     
@@ -114,7 +110,6 @@ final class DetailView: UIView {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
         button.configuration = .gray()
-        //button.addTarget(.none, action: #selector(addToFavourites), for: .touchUpInside)
         return button
     }()
     
@@ -146,10 +141,7 @@ final class DetailView: UIView {
         stackView.spacing = 20
         return stackView
     }()
-    
-    private let repositoryManager = RepositoryManager()
-    var repository: Repository?
-    
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -162,22 +154,15 @@ final class DetailView: UIView {
 
 private extension DetailView {
     func setupViews() {
-        setTexts()
-        Task {
-            await setImage()
-        }
-        
-        superview?.backgroundColor = .black
-        
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
-        superview?.addSubview(avorImageView)
-        superview?.addSubview(createrLabel)
-        superview?.addSubview(headerStackView)
-        superview?.addSubview(readMeView)
-        superview?.addSubview(webButtonStackView)
+        addSubview(avorImageView)
+        addSubview(createrLabel)
+        addSubview(headerStackView)
+        addSubview(readMeView)
+        addSubview(webButtonStackView)
         
-        guard let guide = superview?.rootSafeAreaLayoutGuide else { return }
+        guard let guide = self.rootSafeAreaLayoutGuide else { return }
         avorImageView.snp.makeConstraints { make in
             make.top.equalTo(guide)
             make.size.equalTo(CGSize(width: 30, height: 30))
@@ -212,27 +197,6 @@ private extension DetailView {
             make.leading.equalTo(headerStackView.snp.leading).offset(10)
             make.trailing.equalTo(headerStackView.snp.trailing).offset(-10)
             make.centerX.equalToSuperview()
-        }
-    }
-    
-    func setTexts() {
-        guard let repository else { return }
-        titleLabel.text = repository.fullName
-        starsCountLabel.text = "\(repository.stargazersCount) Star"
-        forkCountLabel.text = "\(repository.forksCount) フォーク"
-        discriptionTextView.text = repository.description
-        createrLabel.text = repository.owner.login
-    }
-    
-    func setImage() async {
-        guard let repository else { return }
-        do {
-            let image = try await repositoryManager.loadImage(url: repository.avatarImageUrl)
-            DispatchQueue.main.async {
-                self.avorImageView.image = image
-            }
-        } catch {
-            print("error")
         }
     }
     

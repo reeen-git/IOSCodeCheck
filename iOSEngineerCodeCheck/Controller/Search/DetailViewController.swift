@@ -8,7 +8,6 @@
 
 import UIKit
 import WebKit
-import SnapKit
 import SFSafeSymbols
 
 final class DetailViewController: UIViewController {
@@ -19,11 +18,62 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+        setTexts()
         setupFavoriteButton()
+        setupButtonAction()
         getReadMeData()
     }
 }
 
+//MARK: - viewDidLoad()で呼ばれるもの
+
+private extension DetailViewController {
+    func setupViews() {
+        Task {
+            await setImage()
+        }
+        
+        detailView.frame = view.bounds
+        view.addSubview(detailView)
+        
+        detailView.readMeView.uiDelegate = self
+    }
+    
+    func setupButtonAction() {
+        detailView.backToReadMeButton.addTarget(.none, action: #selector(goToReadMe), for: .touchUpInside)
+        detailView.backButton.addTarget(.none, action: #selector(goBackward), for: .touchUpInside)
+        detailView.forwardButton.addTarget(.none, action: #selector(goFoward), for: .touchUpInside)
+        detailView.favoriteButton.addTarget(.none, action: #selector(addToFavourites), for: .touchUpInside)
+    }
+    
+    func setupNavigationController() {
+        title = "Search"
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+    }
+    
+    func setImage() async {
+        guard let repository else { return }
+        do {
+            let image = try await repositoryManager.loadImage(url: repository.avatarImageUrl)
+            DispatchQueue.main.async {
+                self.detailView.avorImageView.image = image
+            }
+        } catch {
+            print("error")
+        }
+    }
+    
+    func setTexts() {
+        guard let repository else { return }
+        detailView.titleLabel.text = repository.fullName
+        detailView.starsCountLabel.text = "\(repository.stargazersCount) Star"
+        detailView.forkCountLabel.text = "\(repository.forksCount) フォーク"
+        detailView.discriptionTextView.text = repository.description
+        detailView.createrLabel.text = repository.owner.login
+    }
+}
 
 //MARK: - WKUIDelegateのメゾット
 

@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import SnapKit
 
 final class SearchViewController: UIViewController {
     private var repository = [Repository]()
-    private let searchView = SearchView()
+    private var searchView = SearchView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
         setupNavigationController()
     }
 }
@@ -22,6 +22,12 @@ final class SearchViewController: UIViewController {
 //MARK: - viewDidLoad()で呼ばれるもの
 
 private extension SearchViewController {
+    func setupViews() {
+        searchView.setupDelegates(self)
+        searchView.frame = view.bounds
+        view.addSubview(searchView)
+    }
+    
     func setupNavigationController() {
         title = "Search"
         navigationController?.navigationBar.backgroundColor = .black

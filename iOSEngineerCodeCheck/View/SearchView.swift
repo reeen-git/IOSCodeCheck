@@ -12,17 +12,14 @@ import SnapKit
 //TODO: MVCを適用したい → ControllerからUI部分を分離させ、ロジックと繋げる
 
 final class SearchView: UIView {
-    lazy var tableView: UITableView = {
+    var tableView: UITableView = {
         let tableView = UITableView()
-       // tableView.delegate = self
-       // tableView.dataSource = self
         tableView.backgroundColor = .black
         return tableView
     }()
     
-    lazy var searchBar: UISearchBar = {
+    var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-       // searchBar.delegate = self
         searchBar.backgroundColor = .black
         searchBar.enablesReturnKeyAutomatically = true
         searchBar.placeholder = "Githubのリポジトリを検索"
@@ -39,14 +36,12 @@ final class SearchView: UIView {
     }
 }
 
-private extension SearchView {
-    
-    func setupView() {
-        guard let guide = superview?.rootSafeAreaLayoutGuide else { return }
+extension SearchView {
+    private func setupView() {
+        guard let guide = self.rootSafeAreaLayoutGuide else { return }
         tableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
-        superview?.backgroundColor = .black
-        superview?.addSubview(tableView)
-        superview?.addSubview(searchBar)
+        addSubview(tableView)
+        addSubview(searchBar)
         
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(guide)
@@ -58,5 +53,10 @@ private extension SearchView {
             make.centerX.width.bottom.equalToSuperview()
         }
     }
+    
+    func setupDelegates(_ searchViewController: SearchViewController) {
+        tableView.dataSource = searchViewController
+        tableView.delegate = searchViewController
+        searchBar.delegate = searchViewController
+    }
 }
-
