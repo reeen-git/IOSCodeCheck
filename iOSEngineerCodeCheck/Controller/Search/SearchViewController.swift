@@ -7,31 +7,14 @@
 //
 
 import UIKit
-import SnapKit
 
 final class SearchViewController: UIViewController {
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .black
-        return tableView
-    }()
-    
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.delegate = self
-        searchBar.backgroundColor = .black
-        searchBar.enablesReturnKeyAutomatically = true
-        searchBar.placeholder = "Githubのリポジトリを検索"
-        return searchBar
-    }()
-    
     private var repository = [Repository]()
+    private var searchView = SearchView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        setupViews()
         setupNavigationController()
     }
 }
@@ -39,28 +22,16 @@ final class SearchViewController: UIViewController {
 //MARK: - viewDidLoad()で呼ばれるもの
 
 private extension SearchViewController {
+    func setupViews() {
+        searchView.setupDelegates(self)
+        searchView.frame = view.bounds
+        view.addSubview(searchView)
+    }
+    
     func setupNavigationController() {
         title = "Search"
         navigationController?.navigationBar.backgroundColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
-    }
-    
-    func setupView() {
-        guard let guide = view.rootSafeAreaLayoutGuide else { return }
-        tableView.register(GitTableViewCell.self, forCellReuseIdentifier: "cellId")
-        view.backgroundColor = .black
-        view.addSubview(tableView)
-        view.addSubview(searchBar)
-        
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(guide)
-            make.width.centerX.equalToSuperview()
-        }
-        
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(5)
-            make.centerX.width.bottom.equalToSuperview()
-        }
     }
 }
 
@@ -82,8 +53,8 @@ extension SearchViewController: UISearchBarDelegate {
                 let result = try await ApiCaller.shared.searchs(with: text)
                 self.repository = result
                 DispatchQueue.main.async { [weak self] in
-                    self?.tableView.reloadData()
-                    self?.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                    self?.searchView.tableView.reloadData()
+                    self?.searchView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 }
             } catch {
                 print("error")

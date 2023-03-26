@@ -1,0 +1,150 @@
+//
+//  ViewController2.swift
+//  iOSEngineerCodeCheck
+//
+//  Created by 史 翔新 on 2020/04/21.
+//  Copyright © 2020 YUMEMI Inc. All rights reserved.
+//
+
+import UIKit
+import WebKit
+import SFSafeSymbols
+
+final class DetailViewController: UIViewController {
+    private var htmlData = ""
+    private let repositoryManager = RepositoryManager()
+    private let detailView = DetailView()
+    var repository: Repository?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        setTexts()
+        setupFavoriteButton()
+        setupButtonAction()
+        getReadMeData()
+    }
+}
+
+//MARK: - viewDidLoad()で呼ばれるもの
+
+private extension DetailViewController {
+    func setupViews() {
+        Task {
+            await setImage()
+        }
+        
+        detailView.frame = view.bounds
+        view.addSubview(detailView)
+        
+        detailView.readMeView.uiDelegate = self
+    }
+    
+    func setupButtonAction() {
+        detailView.backToReadMeButton.addTarget(.none, action: #selector(goToReadMe), for: .touchUpInside)
+        detailView.backButton.addTarget(.none, action: #selector(goBackward), for: .touchUpInside)
+        detailView.forwardButton.addTarget(.none, action: #selector(goFoward), for: .touchUpInside)
+        detailView.favoriteButton.addTarget(.none, action: #selector(addToFavourites), for: .touchUpInside)
+    }
+    
+    func setupNavigationController() {
+        title = "Search"
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+    }
+    
+    func setImage() async {
+        guard let repository else { return }
+        do {
+            let image = try await repositoryManager.loadImage(url: repository.avatarImageUrl)
+            DispatchQueue.main.async {
+                self.detailView.avorImageView.image = image
+            }
+        } catch {
+            print("error")
+        }
+    }
+    
+    func setTexts() {
+        guard let repository else { return }
+        detailView.titleLabel.text = repository.fullName
+        detailView.starsCountLabel.text = "\(repository.stargazersCount) Star"
+        detailView.forkCountLabel.text = "\(repository.forksCount) フォーク"
+        detailView.discriptionTextView.text = repository.description
+        detailView.createrLabel.text = repository.owner.login
+    }
+}
+
+//MARK: - WKUIDelegateのメゾット
+
+extension DetailViewController: WKUIDelegate {
+    func getReadMeData() {
+        guard let repository else { return }
+        Task {
+            await self.getRepositoryData(repository)
+        }
+    }
+    
+    func getRepositoryData(_ repo: Repository) async {
+        do {
+            let data = try await ApiCaller.shared.fetchReadme(repository: repo)
+            self.displayMarkdown(input: data)
+        } catch {
+            print("error")
+        }
+    }
+    
+    func displayMarkdown(input: String?) {
+        self.htmlData = repositoryManager.decodeReadmeData(input)
+        DispatchQueue.main.async { [weak self] in
+            self?.detailView.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
+        }
+    }
+    
+    @objc func goToReadMe(_ sender: UIButton) {
+        DispatchQueue.main.async { [weak self] in
+            self?.detailView.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
+        }
+    }
+    
+    @objc func goBackward(_ sender: UIButton) {
+        if detailView.readMeView.canGoBack {
+            detailView.readMeView.goBack()
+        }
+    }
+    
+    @objc func goFoward(_ sender: UIButton) {
+        if detailView.readMeView.canGoForward {
+            detailView.readMeView.goForward()
+        }
+    }
+    
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if navigationAction.targetFrame == nil {
+            detailView.readMeView.load(navigationAction.request)
+        }
+        return nil
+    }
+}
+
+//MARK: - お気に入りリポジトリ追加機能部分
+
+private extension DetailViewController {
+    @objc func addToFavourites() {
+        guard let repository else { return }
+        repositoryManager.setUserDefaults(repository)
+        self.detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
+        self.detailView.favoriteButton.isEnabled = false
+    }
+    
+    private func setupFavoriteButton() {
+        guard let repository else { return }
+        let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        if favorites.contains(repository.id) {
+            self.detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
+            self.detailView.favoriteButton.isEnabled = false
+        } else {
+            self.detailView.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
+        }
+    }
+}
