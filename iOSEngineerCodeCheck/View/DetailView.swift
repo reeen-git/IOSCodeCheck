@@ -153,6 +153,15 @@ final class DetailView: UIView {
 }
 
 extension DetailView {
+    func setTexts(_ repository: Repository?) {
+        guard let repository else { return }
+        titleLabel.text = repository.fullName
+        starsCountLabel.text = "\(repository.stargazersCount) Star"
+        forkCountLabel.text = "\(repository.forksCount) フォーク"
+        discriptionTextView.text = repository.description
+        createrLabel.text = repository.owner.login
+    }
+    
     private func setupViews() {
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
@@ -207,14 +216,5 @@ extension DetailView {
         imageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 15, height: 15))
         }
-    }
-    
-    func setTexts(_ repository: Repository?) {
-        guard let repository else { return }
-        titleLabel.text = repository.fullName
-        starsCountLabel.text = "\(repository.stargazersCount) Star"
-        forkCountLabel.text = "\(repository.forksCount) フォーク"
-        discriptionTextView.text = repository.description
-        createrLabel.text = repository.owner.login
     }
 }
