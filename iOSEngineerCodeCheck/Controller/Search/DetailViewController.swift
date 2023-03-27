@@ -19,7 +19,6 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setTexts()
         setupFavoriteButton()
         setupButtonAction()
         getReadMeData()
@@ -36,8 +35,8 @@ private extension DetailViewController {
         
         detailView.frame = view.bounds
         view.addSubview(detailView)
-        
         detailView.readMeView.uiDelegate = self
+        detailView.setTexts(repository)
     }
     
     func setupButtonAction() {
@@ -63,15 +62,6 @@ private extension DetailViewController {
         } catch {
             print("error")
         }
-    }
-    
-    func setTexts() {
-        guard let repository else { return }
-        detailView.titleLabel.text = repository.fullName
-        detailView.starsCountLabel.text = "\(repository.stargazersCount) Star"
-        detailView.forkCountLabel.text = "\(repository.forksCount) フォーク"
-        detailView.discriptionTextView.text = repository.description
-        detailView.createrLabel.text = repository.owner.login
     }
 }
 

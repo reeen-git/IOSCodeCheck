@@ -152,8 +152,8 @@ final class DetailView: UIView {
     }
 }
 
-private extension DetailView {
-    func setupViews() {
+extension DetailView {
+    private func setupViews() {
         createStackView(imageView: starImage, label: starsCountLabel)
         createStackView(imageView: forkImage, label: forkCountLabel)
         addSubview(avorImageView)
@@ -200,12 +200,21 @@ private extension DetailView {
         }
     }
     
-    func createStackView(imageView: UIImageView, label: UILabel) {
+    private func createStackView(imageView: UIImageView, label: UILabel) {
         lazy var stackView = UIStackView(arrangedSubviews: [imageView, label])
         stackView.spacing = 5
         countStackView.addArrangedSubview(stackView)
         imageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 15, height: 15))
         }
+    }
+    
+    func setTexts(_ repository: Repository?) {
+        guard let repository else { return }
+        titleLabel.text = repository.fullName
+        starsCountLabel.text = "\(repository.stargazersCount) Star"
+        forkCountLabel.text = "\(repository.forksCount) フォーク"
+        discriptionTextView.text = repository.description
+        createrLabel.text = repository.owner.login
     }
 }
