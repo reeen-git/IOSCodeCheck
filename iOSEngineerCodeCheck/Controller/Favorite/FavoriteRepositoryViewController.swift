@@ -34,6 +34,7 @@ final class FavoriteRepositoryViewController: UIViewController {
 
 //MARK: - viewDidLoad()で呼ばれるもの
 
+@MainActor
 private extension FavoriteRepositoryViewController {
     func setupNavigationController() {
         title = "Favorites"
@@ -65,10 +66,8 @@ private extension FavoriteRepositoryViewController {
     
     @objc func favoritesUpdated() {
         repositories.removeAll()
-        self.loadFavoriteRepositorys()
-        DispatchQueue.main.async {
-            self.favoriteTableView.reloadData()
-        }
+        loadFavoriteRepositorys()
+        favoriteTableView.reloadData()
     }
 }
 

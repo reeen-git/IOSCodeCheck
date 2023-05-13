@@ -27,6 +27,7 @@ final class DetailViewController: UIViewController {
 
 //MARK: - viewDidLoad()で呼ばれるもの
 
+@MainActor
 private extension DetailViewController {
     func setupViews() {
         Task {
@@ -56,9 +57,7 @@ private extension DetailViewController {
         guard let repository else { return }
         do {
             let image = try await repositoryManager.loadImage(url: repository.avatarImageUrl)
-            DispatchQueue.main.async {
-                self.detailView.avorImageView.image = image
-            }
+            self.detailView.avorImageView.image = image
         } catch {
             print("error")
         }
@@ -71,30 +70,26 @@ extension DetailViewController: WKUIDelegate {
     func getReadMeData() {
         guard let repository else { return }
         Task {
-            await self.getRepositoryData(repository)
+            await getRepositoryData(repository)
         }
     }
     
     func getRepositoryData(_ repo: Repository) async {
         do {
             let data = try await ApiCaller.shared.fetchReadme(repository: repo)
-            self.displayMarkdown(input: data)
+            displayMarkdown(input: data)
         } catch {
             print("error")
         }
     }
     
     func displayMarkdown(input: String?) {
-        self.htmlData = repositoryManager.decodeReadmeData(input)
-        DispatchQueue.main.async { [weak self] in
-            self?.detailView.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
-        }
+        htmlData = repositoryManager.decodeReadmeData(input)
+        detailView.readMeView.loadHTMLString(htmlData , baseURL: nil)
     }
     
     @objc func goToReadMe(_ sender: UIButton) {
-        DispatchQueue.main.async { [weak self] in
-            self?.detailView.readMeView.loadHTMLString(self?.htmlData ?? "", baseURL: nil)
-        }
+        detailView.readMeView.loadHTMLString(htmlData , baseURL: nil)
     }
     
     @objc func goBackward(_ sender: UIButton) {
@@ -123,18 +118,18 @@ private extension DetailViewController {
     @objc func addToFavourites() {
         guard let repository else { return }
         repositoryManager.setUserDefaults(repository)
-        self.detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
-        self.detailView.favoriteButton.isEnabled = false
+        detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
+        detailView.favoriteButton.isEnabled = false
     }
     
     private func setupFavoriteButton() {
         guard let repository else { return }
         let favorites = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
         if favorites.contains(repository.id) {
-            self.detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
-            self.detailView.favoriteButton.isEnabled = false
+            detailView.favoriteButton.setTitle("お気に入り済み", for: .normal)
+            detailView.favoriteButton.isEnabled = false
         } else {
-            self.detailView.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
+            detailView.favoriteButton.setTitle("+ お気に入りに追加", for: .normal)
         }
     }
 }

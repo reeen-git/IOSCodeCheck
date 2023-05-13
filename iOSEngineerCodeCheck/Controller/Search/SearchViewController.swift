@@ -37,6 +37,7 @@ private extension SearchViewController {
 
 //MARK: - UISearchBarDelegate
 
+@MainActor
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchWord = searchBar.text,
@@ -52,10 +53,8 @@ extension SearchViewController: UISearchBarDelegate {
             do {
                 let result = try await ApiCaller.shared.searchs(with: text)
                 self.repository = result
-                DispatchQueue.main.async { [weak self] in
-                    self?.searchView.tableView.reloadData()
-                    self?.searchView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                }
+                searchView.tableView.reloadData()
+                searchView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             } catch {
                 print("error")
             }

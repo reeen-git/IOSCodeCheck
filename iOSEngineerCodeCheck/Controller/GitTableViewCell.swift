@@ -142,6 +142,7 @@ private extension GitTableViewCell {
 }
 
 //MARK: - privateではないもの
+@MainActor
 extension GitTableViewCell {
     func configure(with repository: Repository) {
         createrLabel.text = repository.owner.login
@@ -159,9 +160,7 @@ extension GitTableViewCell {
     func getImageData(_ repo: Repository) async {
         do {
             let image = try await repositoryManager.loadImage(url: repo.avatarImageUrl)
-            DispatchQueue.main.async {
-                self.avatarImageView.image = image
-            }
+            avatarImageView.image = image
         } catch {
             print("error")
         }
