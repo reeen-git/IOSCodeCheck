@@ -11,7 +11,7 @@ import UIKit
 final class SearchViewController: UIViewController {
     private var repository = [Repository]()
     private var searchView = SearchView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -27,7 +27,7 @@ private extension SearchViewController {
         searchView.frame = view.bounds
         view.addSubview(searchView)
     }
-    
+
     func setupNavigationController() {
         title = "Search"
         navigationController?.navigationBar.backgroundColor = .black
@@ -44,20 +44,20 @@ extension SearchViewController: UISearchBarDelegate {
               let searchEncodeString = searchWord.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
 
         view.endEditing(true)
-        
+
         Task {
             await apiCall(searchEncodeString)
         }
-        
-        func apiCall(_ text: String) async {
-            do {
-                let result = try await ApiCaller.shared.searchs(with: text)
-                self.repository = result
-                searchView.tableView.reloadData()
-                searchView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            } catch {
-                print("error")
-            }
+    }
+
+    func apiCall(_ text: String) async {
+        do {
+            let result = try await ApiCaller.shared.searchs(with: text)
+            self.repository = result
+            searchView.tableView.reloadData()
+            searchView.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        } catch {
+            print("error")
         }
     }
 }
@@ -68,18 +68,18 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         repository.count
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         130
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as? GitTableViewCell else { return UITableViewCell() }
         cell.configure(with: repository[indexPath.row])
         cell.backgroundColor = .black
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailView = DetailViewController()
         navigationController?.pushViewController(detailView, animated: true)
